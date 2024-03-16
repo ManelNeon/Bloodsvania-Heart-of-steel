@@ -6,39 +6,42 @@ using UnityEngine.UI;
 public class UIAnimation : MonoBehaviour
 {
     //UI Animation Code, first we get the image object from the UI
-    [SerializeField] Image m_Image;
+    Image image;
 
     //Then we create an array with all the sprites from the animation
-    [SerializeField] Sprite[] m_SpriteArray;
+    [SerializeField] Sprite[] spriteArray;
 
     //this is the speed for the animation
-    [SerializeField] float m_Speed = .02f;
+    [SerializeField] float speed = .02f;
 
     //getting the index for the animation
-    int m_IndexSprite;
+    int indexSprite;
 
-    //on awake so that it starts again when the object is activated and deactivated
-    void Awake()
+    //getting the image component in the start function and starting the coroutine
+    void Start()
     {
-        StartCoroutine(Func_PlayAnimUI());
+        image = GetComponent<Image>();
     }
 
-    //Function starting the animation
-    IEnumerator Func_PlayAnimUI()
+    //function with the animation
+    public IEnumerator AnimatingSprite()
     {
-        //time between frames
-        yield return new WaitForSeconds(m_Speed);
-
-        //if the index is bigger than the length, it will become zero basically restarting the animation
-        if (m_IndexSprite >= m_SpriteArray.Length)
+        while (true)
         {
-            m_IndexSprite = 0;
-        }
-        
-        //we change the sprite in the image to the sprite in the corresponding array
-        m_Image.sprite = m_SpriteArray[m_IndexSprite];
+            //if the index is bigger than the length, it will become zero basically restarting the animation
+            if (indexSprite >= spriteArray.Length)
+            {
+                indexSprite = 0;
+            }
 
-        //we add one 
-        m_IndexSprite += 1;
+            //we change the sprite in the image to the sprite in the corresponding array
+            image.sprite = spriteArray[indexSprite];
+
+            //we add one 
+            indexSprite += 1;
+
+            //time between frames
+            yield return new WaitForSeconds(speed);
+        }
     }
 }

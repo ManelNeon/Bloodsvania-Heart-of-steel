@@ -7,6 +7,10 @@ public class GameManager : MonoBehaviour
     // creating a static Instance
     public static GameManager Instance;
 
+    [SerializeField] GameObject FightScene;
+
+    [SerializeField] GameObject WalkScene;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,9 +25,16 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ActivateFightScene()
     {
-        
+        WalkScene.SetActive(false); 
+        FightScene.SetActive(true);
     }
+
+    public void ActivateWalkScene()
+    {
+        FightScene.SetActive(false);
+        WalkScene.SetActive(true);
+    }
+
 }

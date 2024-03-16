@@ -51,6 +51,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Destroy(gameObject);
+        GameManager.Instance.ActivateFightScene();
+    }
+
     //if the player exits the trigger
     void OnTriggerExit2D(Collider2D collision)
     {
