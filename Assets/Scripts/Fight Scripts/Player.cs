@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : Stats
 {
     //skillPoints
-    int skillPoint;
+    [HideInInspector] public int skillPoint;
 
     //player's level, starts at 1
     [HideInInspector] public int level;
@@ -18,11 +18,13 @@ public class Player : Stats
 
     protected override void Start()
     {
+        //getting the start from father class and going with it
         base.Start();
 
         //setting the level at 1
         level = 1;
 
+        //calculating the xp needed for the new level
         NewLevelXP();
     }
 
@@ -92,13 +94,13 @@ public class Player : Stats
 
 
 
-    //levels up the player and calculates the new xp required to level up
+    //levels up the player and calculates the new xp required to level up, also adds everything to the stats
     void LevelUp()
     {
         level++;
         NewLevelXP();
-        attack++;
-        aptitude++;
+        attack += 5;
+        aptitude += 5;
         maxHealth += 10;
         maxMana += 10;
         skillPoint++;

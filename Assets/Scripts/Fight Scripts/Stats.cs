@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+//father class for stats, for both enemies and players
 public class Stats : MonoBehaviour
 {
     //player's health stat
@@ -32,12 +33,15 @@ public class Stats : MonoBehaviour
         currentMana = maxMana;
     }
 
+    //code that plays when i want to damage the player/enemy
     public void Damage(int damage)
     {
+        //checking if the damage will put the player below zero
         if (currentHealth- damage > 0)
         {
             currentHealth -= damage;
         }
+        //ife he does destroy the enemy
         else
         {
             currentHealth = 0;
