@@ -40,6 +40,6 @@ public class ButtonManager : MonoBehaviour
     //code to play when selecting attack
     public void AttackSelected()
     {
-
+        GameManager.Instance.AttackEnemy();
     }
 }

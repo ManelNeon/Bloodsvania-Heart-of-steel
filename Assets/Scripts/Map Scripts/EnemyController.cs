@@ -19,6 +19,7 @@ public class EnemyController : MonoBehaviour
     //variable that checks if the enemy is warned
     bool warned;
 
+    [SerializeField] int enemyCode;
     void Start()
     {
         //getting the rigidbody
@@ -54,7 +55,7 @@ public class EnemyController : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         Destroy(gameObject);
-        GameManager.Instance.ActivateFightScene();
+        GameManager.Instance.ActivateFightScene(enemyCode);
     }
 
     //if the player exits the trigger

@@ -1,52 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Stats
 {
-    //player's health stat
-    [SerializeField] int maxHealth;
-
-    //player's current health
-    int currentHealth;
-
-    //player's "mana" stat
-    [SerializeField] int maxMana;
-
-    //player's current "mana"
-    int currentMana;
-
-    //player's attack stat
-    [SerializeField] int attack;
-
-    //player's aptitude stat
-    [SerializeField] int aptitude;
+    //skillPoints
+    int skillPoint;
 
     //player's level, starts at 1
-    [SerializeField] int level;
+    [HideInInspector] public int level;
 
     //player's xp
-    [SerializeField] int xp;
+    [HideInInspector] public int xp;
 
     //how much xp the player needs to level up
-    int xpForLevel;
+    [HideInInspector] public int xpForLevel;
 
-    void Start()
+    protected override void Start()
     {
-        //setting the player's current health to the max health
-        currentHealth = maxHealth;
+        base.Start();
 
-        //setting the player's mana to the max mana
-        currentMana = maxMana;
-    }   
+        //setting the level at 1
+        level = 1;
+
+        NewLevelXP();
+    }
 
     //getting xp, it's public because will be used outside this code probably
     public void GetXP(int newXP)
     {
-        //temporary code to establish the quantity needed to level up
-        NewLevelXP();
-
         //checking if the addition of the current xp with the new xp is below the required to level up
         if (xp + newXP < xpForLevel)
         {
@@ -108,11 +90,17 @@ public class Player : MonoBehaviour
         }
     }
 
+
+
     //levels up the player and calculates the new xp required to level up
     void LevelUp()
     {
         level++;
         NewLevelXP();
+        attack++;
+        aptitude++;
+        maxHealth += 10;
+        maxMana += 10;
+        skillPoint++;
     }
-
 }
