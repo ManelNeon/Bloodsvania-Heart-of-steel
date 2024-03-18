@@ -21,6 +21,7 @@ public class UIAnimation : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
+        StartCoroutine(AnimatingSprite());
     }
 
     //function with the animation
