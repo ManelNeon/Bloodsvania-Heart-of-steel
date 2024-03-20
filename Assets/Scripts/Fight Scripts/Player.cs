@@ -16,6 +16,16 @@ public class Player : Stats
     //how much xp the player needs to level up
     [HideInInspector] public int xpForLevel;
 
+    public bool hasSpecialOne;
+
+    public bool hasSpecialTwo;
+
+    public bool hasSpecialThree;
+
+    public bool hasSpecialFour;
+
+    public bool hasSpecialFive;
+
     protected override void Start()
     {
         //getting the start from father class and going with it

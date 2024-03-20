@@ -13,19 +13,6 @@ public class ButtonManager : MonoBehaviour
 
     //getting the player script
     [SerializeField] Player player;
- 
-    //code that plays when you select the specials
-    public void SpecialsSelected()
-    {
-        //checks if the items are active, in case they are deactivate them
-        if (items.activeInHierarchy)
-        {
-            items.SetActive(false);
-        }
-
-        //activate specials
-        specials.SetActive(true);
-    }
 
     //code that plays when you select the plus button when you have a skillpoint
     public void AttackPlus()
@@ -83,10 +70,49 @@ public class ButtonManager : MonoBehaviour
         items.SetActive(true);
     }
 
-    //code to play when selecting attack
+    //code that plays when you select the specials
+    public void SpecialsSelected()
+    {
+        //checks if the items are active, in case they are deactivate them
+        if (items.activeInHierarchy)
+        {
+            items.SetActive(false);
+        }
+
+        //activate specials
+        specials.SetActive(true);
+    }
+
+    /*code to play when selecting attack 
+      0 - Normal Attack
+      1 - Special One etc.. */
     public void AttackSelected()
     {
         //starting the coroutine for the player attacking the enemy
-        StartCoroutine(GameManager.Instance.AttackEnemy());
+        StartCoroutine(GameManager.Instance.AttackEnemy(false, 0));
+    }
+    public void SpecialOne()
+    {
+        StartCoroutine(GameManager.Instance.AttackEnemy(true, 1));
+    }
+
+    public void SpecialTwo()
+    {
+        StartCoroutine(GameManager.Instance.AttackEnemy(true, 2));
+    }
+
+    public void SpecialThree()
+    {
+        StartCoroutine(GameManager.Instance.AttackEnemy(true, 3));
+    }
+
+    public void SpecialFour()
+    {
+        StartCoroutine(GameManager.Instance.AttackEnemy(true, 4));
+    }
+
+    public void SpecialFive()
+    {
+        StartCoroutine(GameManager.Instance.AttackEnemy(true, 5));
     }
 }

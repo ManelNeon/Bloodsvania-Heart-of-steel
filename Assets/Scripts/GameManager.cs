@@ -33,6 +33,10 @@ public class GameManager : MonoBehaviour
     //getting the panel where we inform the player what's happening on screen
     [SerializeField] TextMeshProUGUI attackPanel;
 
+    [SerializeField] GameObject textPrefab;
+
+    [SerializeField] GameObject textPlacement;
+
     //getting the enemy prefabs
     [SerializeField] GameObject[] enemyPrefabs;
 
@@ -102,6 +106,17 @@ public class GameManager : MonoBehaviour
         GameObject.Find("ManaStat").GetComponent<TextMeshProUGUI>().text = "Blood - " + playerStats.maxMana;
         GameObject.Find("ApptitudeStat").GetComponent<TextMeshProUGUI>().text = "Apptitude - " + playerStats.aptitude;
         GameObject.Find("XpStat").GetComponent<TextMeshProUGUI>().text =  playerStats.xp + " / " + playerStats.xpForLevel;
+
+        if (playerStats.hasSpecialOne)
+        {
+            GameObject text = Instantiate(textPrefab, textPlacement.transform.position, textPrefab.transform.rotation);
+
+            text.transform.SetParent(textPlacement.transform);
+
+            text.GetComponent<TextMeshProUGUI>().text = ("Beast's Sword");
+
+            text.transform.position = new Vector3(text.transform.position.x - 65, text.transform.position.y - 85, text.transform.position.z);
+        }
     }
 
     //activating the fight scene and deactivating the walk scene
@@ -125,22 +140,55 @@ public class GameManager : MonoBehaviour
         walkScene.SetActive(true);
     }
 
-    //Ienumerator for when the player attacks the enemy
-    public IEnumerator AttackEnemy()
+    //Ienumerator for when the player attacks the enemy, checking if it is a special, and it's attack code
+    public IEnumerator AttackEnemy(bool isSpecial, int attackCode)
     {
         if (playerTurn)
         {
             //getting the playerstats
             Player playerStats = player.GetComponent<Player>();
 
-            //randomizing the multiplier
-            int randomMultiplier = Random.Range(1, 6);
-            
-            //creating a new attack variable that will multiply with the attack stat from the player
-            int attack = playerStats.attack * randomMultiplier;
+            //intializing the random multiplier
+            int randomMultiplier;
 
-            //changing the text on the attack panel
-            attackPanel.text = "Player has attacked for " + attack + " !!!";
+            //intializing the attack value
+            int attack;
+
+            //checking if the attack is a special or not
+            if (!isSpecial)
+            {
+                //randomizing the multiplier
+                randomMultiplier = Random.Range(1, 6);
+
+                //creating a new attack variable that will multiply with the attack stat from the player
+                attack = playerStats.attack * randomMultiplier;
+
+                //changing the text on the attack panel
+                attackPanel.text = "Player has attacked for " + attack + " !!!";
+            }
+            else
+            {
+                //random multiplier bigger if it is a special
+                randomMultiplier = Random.Range(3, 8);
+
+                //multiplying with the aptitude of the player instead of the attack
+                attack = playerStats.aptitude * randomMultiplier;
+
+                //checking if it's super effective, also takes the mana away
+                if (SuperEffectiveCheck(attackCode))
+                {
+                    //if it is super effective, multiply by 2
+                    attack *= 2;
+
+                    //changing the text on the attack panel
+                    attackPanel.text = "IT'S SUPER EFFECTIVE, THE Player has attacked for " + attack + "!!!!!";
+                }
+                else
+                {
+                    //changing the text on the attack panel
+                    attackPanel.text = "Player has attacked for " + attack + " !!!";
+                }
+            }
 
             //the player's turn is false
             playerTurn = false;
@@ -150,6 +198,8 @@ public class GameManager : MonoBehaviour
 
             //playing the speciall effects function
             SpecialEffects(randomMultiplier, true);
+
+            //According to the attack code, an equivalent animation will play, so here you put something like Animator.SetInt(attackCode_i, attackCode);
 
             //waiting two seconds for the damage to apply for good measure
             yield return new WaitForSeconds(2);
@@ -203,7 +253,7 @@ public class GameManager : MonoBehaviour
         Player playerStats = player.GetComponent<Player>();
 
         //getting a random multiplier to multiply with the enemies attack
-        int randomMultiplier = Random.Range(1, 3);
+        int randomMultiplier = Random.Range(1, 4);
 
         int attack = enemyStats.attack * randomMultiplier;
 
@@ -228,7 +278,79 @@ public class GameManager : MonoBehaviour
 
         yield break;
     }
+    
+    //function that needs the special code, and with a switch case, takes the mana off and returns true if it's super effective or false if it isn't
+    bool SuperEffectiveCheck(int specialCode)
+    {
+        //getting the player's stats
+        Player playerStats = player.GetComponent<Player>();
 
+        switch (specialCode)
+        {
+            case 1:
+
+                //taking the mana off the player
+                playerStats.currentMana -= 25;
+
+                //checking if it's super effective
+                if (enemyStats.typing == 2 || enemyStats.typing == 3)
+                {
+                    //if it is returns true
+                    return true;
+                }
+
+                //if it isnt returns false
+                return false;
+
+            case 2:
+
+                playerStats.currentMana -= 20;
+
+                if (enemyStats.typing == 3 || enemyStats.typing == 4)
+                {
+                    return true;
+                }
+
+                return false;
+
+            case 3:
+
+                playerStats.currentMana -= 15;
+
+                if (enemyStats.typing == 4 || enemyStats.typing == 5)
+                {
+                    return true;
+                }
+
+                return false;
+
+            case 4:
+
+                playerStats.currentMana -= 35;
+
+                if (enemyStats.typing == 5 || enemyStats.typing == 1)
+                {
+                    return true;
+                }
+
+                return false;
+
+            case 5:
+
+                playerStats.currentMana -= 20;
+
+                if (enemyStats.typing == 1 || enemyStats.typing == 2)
+                {
+                    return true;
+                }
+
+                return false;
+
+            default:
+
+                return false;
+        }
+    }
 
     //special effects function, that will receieve the random multiplier to see if it was a crit, and a bool to see if it is or not the player attacking
     void SpecialEffects(int randomMultiplier, bool isPlayerAttack)

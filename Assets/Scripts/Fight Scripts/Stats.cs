@@ -10,13 +10,13 @@ public class Stats : MonoBehaviour
     public int maxHealth;
 
     //player's current health
-    int currentHealth;
+    [HideInInspector] public int currentHealth;
 
     //player's "mana" stat
     public int maxMana;
 
     //player's current "mana"
-    int currentMana;
+    [HideInInspector] public int currentMana;
 
     //player's attack stat
     public int attack;
