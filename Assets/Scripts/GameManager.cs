@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject walkScene;
 
     //getting the pause menu
-    [SerializeField] GameObject pauseMenu;
+    public GameObject pauseMenu;
 
     //getting the buttons that up the skills
     [SerializeField] GameObject skillButtons;
@@ -33,10 +33,6 @@ public class GameManager : MonoBehaviour
     //getting the panel where we inform the player what's happening on screen
     [SerializeField] TextMeshProUGUI attackPanel;
 
-    [SerializeField] GameObject textPrefab;
-
-    [SerializeField] GameObject textPlacement;
-
     //getting the enemy prefabs
     [SerializeField] GameObject[] enemyPrefabs;
 
@@ -47,7 +43,7 @@ public class GameManager : MonoBehaviour
     Enemy enemyStats;
 
     //cheking if it is or not the player's turn
-    bool playerTurn;
+    [HideInInspector] public bool playerTurn;
 
     // Start is called before the first frame update
     void Start()
@@ -66,7 +62,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //if the player clicks escape, activate or deactivate the pause menu
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && walkScene.activeInHierarchy)
         {
             if (pauseMenu.activeInHierarchy)
             {
@@ -106,17 +102,6 @@ public class GameManager : MonoBehaviour
         GameObject.Find("ManaStat").GetComponent<TextMeshProUGUI>().text = "Blood - " + playerStats.maxMana;
         GameObject.Find("ApptitudeStat").GetComponent<TextMeshProUGUI>().text = "Apptitude - " + playerStats.aptitude;
         GameObject.Find("XpStat").GetComponent<TextMeshProUGUI>().text =  playerStats.xp + " / " + playerStats.xpForLevel;
-
-        if (playerStats.hasSpecialOne)
-        {
-            GameObject text = Instantiate(textPrefab, textPlacement.transform.position, textPrefab.transform.rotation);
-
-            text.transform.SetParent(textPlacement.transform);
-
-            text.GetComponent<TextMeshProUGUI>().text = ("Beast's Sword");
-
-            text.transform.position = new Vector3(text.transform.position.x - 65, text.transform.position.y - 85, text.transform.position.z);
-        }
     }
 
     //activating the fight scene and deactivating the walk scene

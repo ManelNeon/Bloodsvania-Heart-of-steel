@@ -60,27 +60,17 @@ public class ButtonManager : MonoBehaviour
     //code that plays when you select the items
     public void ItemsSelected()
     {
-        //checks if specials are active, in case they are deactivate them
-        if (specials.activeInHierarchy)
-        {
-            specials.SetActive(false);
-        }
-
-        //activate items
-        items.SetActive(true);
+        //activating the UI that contains the items
+        GameManager.Instance.pauseMenu.SetActive(true);
+        GameManager.Instance.ChangeStats();
     }
 
     //code that plays when you select the specials
     public void SpecialsSelected()
     {
-        //checks if the items are active, in case they are deactivate them
-        if (items.activeInHierarchy)
-        {
-            items.SetActive(false);
-        }
-
-        //activate specials
-        specials.SetActive(true);
+        //activating the UI that contains the specials
+        GameManager.Instance.pauseMenu.SetActive(true);
+        GameManager.Instance.ChangeStats();
     }
 
     /*code to play when selecting attack 
@@ -90,29 +80,5 @@ public class ButtonManager : MonoBehaviour
     {
         //starting the coroutine for the player attacking the enemy
         StartCoroutine(GameManager.Instance.AttackEnemy(false, 0));
-    }
-    public void SpecialOne()
-    {
-        StartCoroutine(GameManager.Instance.AttackEnemy(true, 1));
-    }
-
-    public void SpecialTwo()
-    {
-        StartCoroutine(GameManager.Instance.AttackEnemy(true, 2));
-    }
-
-    public void SpecialThree()
-    {
-        StartCoroutine(GameManager.Instance.AttackEnemy(true, 3));
-    }
-
-    public void SpecialFour()
-    {
-        StartCoroutine(GameManager.Instance.AttackEnemy(true, 4));
-    }
-
-    public void SpecialFive()
-    {
-        StartCoroutine(GameManager.Instance.AttackEnemy(true, 5));
     }
 }
