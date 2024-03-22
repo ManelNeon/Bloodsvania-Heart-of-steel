@@ -5,14 +5,39 @@ using UnityEngine;
 //Script that contains all of the button functionality, will get big very fast
 public class ButtonManager : MonoBehaviour
 {
-    //getting the items game object
-    [SerializeField] GameObject items;
-
-    //getting the specials game object
-    [SerializeField] GameObject specials;
-
     //getting the player script
     [SerializeField] Player player;
+
+    //the box with the special description
+    [SerializeField] GameObject specialDescription;
+
+    //the box with the item description
+    [SerializeField] GameObject itemDescription;
+
+    //the pause ui description
+    [SerializeField] GameObject pauseUI;
+
+    //disabling the pause description box when pressing back
+    public void DisablePauseUI()
+    {
+        GameManager.Instance.DisablingHand();
+        pauseUI.SetActive(false);
+    }
+
+    //disabling the special description box when pressing back
+    public void DisableSpecialDescription()
+    {
+        GameManager.Instance.DisablingHand();
+        specialDescription.SetActive(false);
+    }
+
+    //disabling the item description box when pressing back
+    public void DisableItemDescription()
+    {
+        GameManager.Instance.DisablingHand();
+        itemDescription.SetActive(false);
+    }
+
 
     //code that plays when you select the plus button when you have a skillpoint
     public void AttackPlus()
@@ -28,6 +53,8 @@ public class ButtonManager : MonoBehaviour
 
         //changing the stats on the menu
         GameManager.Instance.ChangeStats();
+
+        GameManager.Instance.DisablingHand();
     }
 
     //code that plays when you select the plus button next to health
@@ -37,6 +64,7 @@ public class ButtonManager : MonoBehaviour
         player.skillPoint--;
         GameManager.Instance.UpgradesNotAvailable();
         GameManager.Instance.ChangeStats();
+        GameManager.Instance.DisablingHand();
     }
 
     //code that plays when you select the plus button next to mana
@@ -45,6 +73,7 @@ public class ButtonManager : MonoBehaviour
         player.maxMana += 10;
         player.skillPoint--;
         GameManager.Instance.UpgradesNotAvailable();
+        GameManager.Instance.DisablingHand();
         GameManager.Instance.ChangeStats();
     }
 
@@ -55,30 +84,39 @@ public class ButtonManager : MonoBehaviour
         player.skillPoint--;
         GameManager.Instance.UpgradesNotAvailable();
         GameManager.Instance.ChangeStats();
+        GameManager.Instance.DisablingHand();
     }
 
     //code that plays when you select the items
     public void ItemsSelected()
     {
-        //activating the UI that contains the items
-        GameManager.Instance.pauseMenu.SetActive(true);
-        GameManager.Instance.ChangeStats();
+        if (GameManager.Instance.playerTurn)
+        {
+            //activating the UI that contains the items
+            pauseUI.SetActive(true);
+            GameManager.Instance.ChangeStats();
+        }
     }
 
     //code that plays when you select the specials
     public void SpecialsSelected()
     {
-        //activating the UI that contains the specials
-        GameManager.Instance.pauseMenu.SetActive(true);
-        GameManager.Instance.ChangeStats();
+        if (GameManager.Instance.playerTurn)
+        {
+            //activating the UI that contains the specials
+            pauseUI.SetActive(true);
+            GameManager.Instance.ChangeStats();
+        }
     }
 
-    /*code to play when selecting attack 
-      0 - Normal Attack
-      1 - Special One etc.. */
+    //when we select the attack on the attack screen this plays, sets the UI to inavctive in case the player selected specials but didnt commit to it
     public void AttackSelected()
     {
-        //starting the coroutine for the player attacking the enemy
-        StartCoroutine(GameManager.Instance.AttackEnemy(false, 0));
+        if (GameManager.Instance.playerTurn)
+        {
+            pauseUI.SetActive(false);
+            //starting the coroutine for the player attacking the enemy
+            GameManager.Instance.StartCoroutine(GameManager.Instance.AttackEnemy());
+        }
     }
 }

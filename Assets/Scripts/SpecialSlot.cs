@@ -3,25 +3,36 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using UnityEngine.XR;
 
 //code for the special Slots on the UI, has a clicker, enter and exit event
 public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    // -------- SPECIAL DATA -------- //
+
     //the special's name for the UI
     string specialName;
 
     //the typing Code, for the UI
     int typingCode;
 
-    //the special code for the attack 
-    int specialCode;
+    //time needed to tplay the special's animation
+    float specialTime;
 
     //the typing for the UI
     string typing;
 
+    //special's Description
+    string specialDescription;
+
+    //special's image
+    Sprite specialImage;
+
     //checking if the slot is full
     [HideInInspector] public bool isFull;
+
+    // -------- SPECIAL SLOT -------- //
 
     //text for the special
     [SerializeField] TMP_Text specialText;
@@ -29,20 +40,38 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     //position to where the pointer will go
     [SerializeField] Transform postion;
 
-    //code that adds a special, requires the name of the special, it's typing and special code
-    public void AddSpecial(string specialName, int typingCode, int specialCode)
+    // ------- SPECIAL DESCRIPTION ------ //
+
+    //object that contains all the descriptive features of the special attack
+    [SerializeField] GameObject descriptionBox;
+
+    //object that will contain the image of the special attack
+    [SerializeField] Image spriteSlot;
+
+    //object that will contain the name of the special attack
+    [SerializeField] TextMeshProUGUI specialNameText;
+
+    //object that will contain the description of the special attack
+    [SerializeField] TextMeshProUGUI specialDescriptionText;
+
+    //code that adds a special, requires the name of the special, it's typing Code, the time it takes to use the special, its image and the description
+    public void AddSpecial(string specialName, int typingCode, float specialTime, Sprite specialImage, string specialDescription)
     {
         //assigning the special's data to the spots
         this.specialName = specialName;
 
         this.typingCode = typingCode;
 
-        this.specialCode = specialCode;
+        this.specialTime = specialTime;
+
+        this.specialImage = specialImage;
+
+        this.specialDescription = specialDescription;
 
         //it is now a full slot
         isFull = true;
 
-        //assigning the type to the typing
+        //assigning the corresponding typing text according to the typing text
         AssignTyping(typingCode);
 
         //changing the text to the special's name and it's typing
@@ -90,30 +119,54 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         }
     }
 
-    //On click event, if its the player's turn, so its on combat, if left click, attack, if right click see what that special does, if not the player turn, not in combat, just see what the special does
+    //On click events, when it's the player turn and when its not (the player can only open up the menu while in combat if it's his turn)
     public void OnPointerClick(PointerEventData eventData)
     {
         if (GameManager.Instance.playerTurn)
         {
+            //if the player left clicks while fighting
             if(eventData.button == PointerEventData.InputButton.Left)
             {
+                //the pause menu will deactivate, we will start a courotine with the special attack and we will disable the hand
                 GameManager.Instance.pauseMenu.SetActive(false);
                 GameManager.Instance.UpgradesNotAvailable();
-                GameManager.Instance.StartCoroutine(GameManager.Instance.AttackEnemy(true, specialCode));
+                GameManager.Instance.StartCoroutine(GameManager.Instance.SpecialAttack(specialName, typingCode, specialTime));
+                GameManager.Instance.DisablingHand();
             }
+            //if the player right clicks while fighting
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                Debug.Log("Show What the Special Does");
+                //we will show the description box
+                ShowDescriptionBox();
+
+                //disbaling the hand
+                GameManager.Instance.DisablingHand();
             }
         }
         else
         {
+            //if the player left clicks while not fighting, we will show the details of the spell
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                Debug.Log("Show What the Special Does");
+                ShowDescriptionBox();
+
+                GameManager.Instance.DisablingHand();
             }
         }
     }
+
+    //code to show the description box and assign the corresponding variables
+    void ShowDescriptionBox()
+    {
+        spriteSlot.sprite = specialImage;
+
+        specialNameText.text = specialName;
+
+        specialDescriptionText.text = specialDescription;
+
+        descriptionBox.SetActive(true);
+    }
+
 
     //putting the hand on the position I want it too, and setting its scale lower
     public void OnPointerEnter(PointerEventData eventData)
@@ -128,10 +181,8 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     //getting the hand out of the way, puff and its scale back to normal
     public void OnPointerExit(PointerEventData eventData)
     {
-        GameObject hand = GameObject.Find("Hand 1");
-
-        hand.transform.localScale = new Vector3(1, 1, 1);
-
-        hand.transform.position = new Vector3(-694f, -658f, 0);
+        GameManager.Instance.DisablingHand();
     }
+
+
 }

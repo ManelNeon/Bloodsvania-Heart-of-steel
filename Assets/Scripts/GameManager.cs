@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     //getting the player game object
     [SerializeField] GameObject player;
 
+    //getting the player Stats
+    Player playerStats;
+
     //getting the crit special effect
     [SerializeField] ParticleSystem critEffect;
 
@@ -32,6 +35,12 @@ public class GameManager : MonoBehaviour
 
     //getting the panel where we inform the player what's happening on screen
     [SerializeField] TextMeshProUGUI attackPanel;
+
+    //the display that shows the enemies we're fighting on the fight scene
+    [SerializeField] TextMeshProUGUI enemiesDisplay;
+
+    //the display that shows the player's party
+    [SerializeField] TextMeshProUGUI playerDisplay;
 
     //getting the enemy prefabs
     [SerializeField] GameObject[] enemyPrefabs;
@@ -57,6 +66,9 @@ public class GameManager : MonoBehaviour
         
         //if there isnt, this is the Instance
         Instance = this;
+
+        //getting the player stats from the player
+        playerStats = player.GetComponent<Player>();
     }
 
     void Update()
@@ -66,21 +78,31 @@ public class GameManager : MonoBehaviour
         {
             if (pauseMenu.activeInHierarchy)
             {
+                //code that deactivates the hand, necessary in case the mouse is on top of a button
+                DisablingHand();
                 pauseMenu.SetActive(false);
-                UpgradesNotAvailable();
             }
             else if (!pauseMenu.activeInHierarchy)
             {
                 pauseMenu.SetActive(true);
-                if (player.GetComponent<Player>().skillPoint > 0)
-                {
-                    skillButtons.SetActive(true);
-                }
+                //checking if the upgrades are available
+                UpgradesNotAvailable();
+                //changing the stats according to the player
                 ChangeStats();
             }
         } 
     }
-    
+
+    //code that disables that hand
+    public void DisablingHand()
+    {
+        GameObject hand = GameObject.Find("Hand 1");
+
+        hand.transform.localScale = new Vector3(0.76f, 0.76f, 0.76f);
+
+        hand.transform.position = new Vector3(-694f, -658f, 0);
+    }
+
     //code that checks if the player has any skillpoints, if he hasn't, deactivate the upgrade skill buttons
     public void UpgradesNotAvailable()
     {
@@ -88,14 +110,16 @@ public class GameManager : MonoBehaviour
         {
             skillButtons.SetActive(false);
         }
+        else
+        {
+            skillButtons.SetActive(true);
+        }
     }
     
     /*Changing the stats on the pause menu, finding all the stats on the main menu and changing the stats, because this ideally only plays when the player
     is on the main menu, no need to reference the objects on the variables */
     public void ChangeStats()
     {
-        Player playerStats = player.GetComponent<Player>();
-
         GameObject.Find("LevelStat").GetComponent<TextMeshProUGUI>().text = "Level - " + playerStats.level; 
         GameObject.Find("AttackStat").GetComponent<TextMeshProUGUI>().text = "Attack - " + playerStats.attack;
         GameObject.Find("HealthStat").GetComponent<TextMeshProUGUI>().text = "Health - " + playerStats.maxHealth;
@@ -114,8 +138,20 @@ public class GameManager : MonoBehaviour
         enemy = Instantiate(enemyPrefabs[enemyCode], new Vector3(44.9f, 2.2f), enemyPrefabs[enemyCode].transform.rotation);
         enemyStats = enemy.GetComponent<Enemy>();
 
+        //changing the enemies display
+        enemiesDisplay.text = "- " + enemyStats.userName;
+
+        //changing the players display text
+        InFightChangeStats();
+
         //checking that its the player turn
         playerTurn = true;
+    }
+
+    //code that changes the player's display text
+    void InFightChangeStats()
+    {
+        playerDisplay.text = "- "+ playerStats.userName +"    "+ playerStats.currentHealth +"/" + playerStats.maxHealth + "     " + playerStats.currentMana + "/" + playerStats.maxMana;
     }
 
     //activating the walk scene and deactivating the fight scene
@@ -125,13 +161,108 @@ public class GameManager : MonoBehaviour
         walkScene.SetActive(true);
     }
 
-    //Ienumerator for when the player attacks the enemy, checking if it is a special, and it's attack code
-    public IEnumerator AttackEnemy(bool isSpecial, int attackCode)
+    //code that will be called when we use an item
+    public IEnumerator UsingItem()
+    {
+        yield break;
+    }
+
+    //code that plays when we use a special, we need it's name, it's typing and it's animation Time
+    public IEnumerator SpecialAttack(string specialName, int typing, float animationTime)
     {
         if (playerTurn)
         {
-            //getting the playerstats
-            Player playerStats = player.GetComponent<Player>();
+            //intializing the random multiplier
+            int randomMultiplier;
+
+            //intializing the attack value
+            int attack;
+
+            //random multiplier bigger if it is a special
+            randomMultiplier = Random.Range(5, 8);
+
+            //multiplying with the aptitude of the player instead of the attack
+            attack = playerStats.aptitude * randomMultiplier;
+
+            //changing the text on the attack panel
+            attackPanel.text = "Player has used " + specialName + "!!!";
+
+            yield return new WaitForSeconds(1);
+
+            //checking if it's super effective, also takes the mana away
+            if (SuperEffectiveCheck(typing))
+            {
+                //if it is super effective, multiply by 2
+                attack *= 2;
+
+                //changing the text on the attack panel
+                attackPanel.text = specialName +" IS SUPER EFFECTIVE !!!";
+
+                yield return new WaitForSeconds(1);
+            }
+
+            //changing the stats so that it shows how many mana he has now
+            InFightChangeStats();
+
+            //how much damage the special did
+            attackPanel.text = specialName + " dealt " + attack + " damage !!!";
+
+            playerTurn = false;
+
+            //here is where the animation will play
+
+            //waiting time for the animation to play (still no animation, just preparing for when I get them)
+            yield return new WaitForSeconds(animationTime);
+
+            SpecialEffects(randomMultiplier, true);
+
+            //waiting two seconds for the damage to apply for good measure
+            yield return new WaitForSeconds(2);
+
+            //applying damage to the enemy
+            enemyStats.Damage(attack);
+
+            //waiting just 0.1 seconds so that if the enemy is destroyed the code can recognize it after
+            yield return new WaitForSeconds(0.1f);
+
+            //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
+            if (enemy != null)
+            {
+                attackPanel.text = "It's the enemy's turn now.";
+
+                StartCoroutine(EnemyAttack());
+
+                yield break;
+            }
+            //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
+            else
+            {
+                attackPanel.text = "You have defeated the enemy!!";
+
+                yield return new WaitForSeconds(1);
+
+                playerStats.GetXP(enemyStats.xpDrop);
+
+                attackPanel.text = "You got " + enemyStats.xpDrop + " XP!!";
+
+                yield return new WaitForSeconds(1);
+
+                ActivateWalkScene();
+
+                yield break;
+            }
+        }
+        else
+        {
+            yield break;
+        }
+    }
+
+    //Ienumerator for when the player attacks the enemy, checking if it is a special, and it's attack code
+    public IEnumerator AttackEnemy()
+    {
+        if (playerTurn)
+        {
 
             //intializing the random multiplier
             int randomMultiplier;
@@ -139,52 +270,25 @@ public class GameManager : MonoBehaviour
             //intializing the attack value
             int attack;
 
-            //checking if the attack is a special or not
-            if (!isSpecial)
-            {
-                //randomizing the multiplier
-                randomMultiplier = Random.Range(1, 6);
+            //randomizing the multiplier
+            randomMultiplier = Random.Range(1, 6);
+            
+            //creating a new attack variable that will multiply with the attack stat from the player
+            attack = playerStats.attack * randomMultiplier;
 
-                //creating a new attack variable that will multiply with the attack stat from the player
-                attack = playerStats.attack * randomMultiplier;
-
-                //changing the text on the attack panel
-                attackPanel.text = "Player has attacked for " + attack + " !!!";
-            }
-            else
-            {
-                //random multiplier bigger if it is a special
-                randomMultiplier = Random.Range(3, 8);
-
-                //multiplying with the aptitude of the player instead of the attack
-                attack = playerStats.aptitude * randomMultiplier;
-
-                //checking if it's super effective, also takes the mana away
-                if (SuperEffectiveCheck(attackCode))
-                {
-                    //if it is super effective, multiply by 2
-                    attack *= 2;
-
-                    //changing the text on the attack panel
-                    attackPanel.text = "IT'S SUPER EFFECTIVE, THE Player has attacked for " + attack + "!!!!!";
-                }
-                else
-                {
-                    //changing the text on the attack panel
-                    attackPanel.text = "Player has attacked for " + attack + " !!!";
-                }
-            }
+            //changing the text on the attack panel
+            attackPanel.text = "Player has attacked for " + attack + " !!!";
 
             //the player's turn is false
             playerTurn = false;
+
+            //Here is where the animation will play
 
             //waiting time for the animation to play (still no animation, just preparing for when I get them)
             yield return new WaitForSeconds(2);
 
             //playing the speciall effects function
             SpecialEffects(randomMultiplier, true);
-
-            //According to the attack code, an equivalent animation will play, so here you put something like Animator.SetInt(attackCode_i, attackCode);
 
             //waiting two seconds for the damage to apply for good measure
             yield return new WaitForSeconds(2);
@@ -234,8 +338,6 @@ public class GameManager : MonoBehaviour
         //wait 1 second for pacing issues
         yield return new WaitForSeconds(1);
 
-        //getting the player stats
-        Player playerStats = player.GetComponent<Player>();
 
         //getting a random multiplier to multiply with the enemies attack
         int randomMultiplier = Random.Range(1, 4);
@@ -254,6 +356,8 @@ public class GameManager : MonoBehaviour
         //playing the special effects
         SpecialEffects(randomMultiplier, false);
 
+        InFightChangeStats();
+
         yield return new WaitForSeconds(2);
 
         //its the player turn now after 2 seconds
@@ -267,9 +371,6 @@ public class GameManager : MonoBehaviour
     //function that needs the special code, and with a switch case, takes the mana off and returns true if it's super effective or false if it isn't
     bool SuperEffectiveCheck(int specialCode)
     {
-        //getting the player's stats
-        Player playerStats = player.GetComponent<Player>();
-
         switch (specialCode)
         {
             case 1:

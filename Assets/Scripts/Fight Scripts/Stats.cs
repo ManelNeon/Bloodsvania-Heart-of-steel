@@ -6,6 +6,9 @@ using UnityEngine;
 //father class for stats, for both enemies and players
 public class Stats : MonoBehaviour
 {
+    //player's or enemies name
+    public string userName;
+
     //player's health stat
     public int maxHealth;
 

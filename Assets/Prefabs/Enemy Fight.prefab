@@ -97,8 +97,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08c73931f949c0b4099174f387e3906f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userName: Big Black Buldge
   maxHealth: 150
+  currentHealth: 0
   maxMana: 200
+  currentMana: 0
   attack: 10
   aptitude: 15
   xpDrop: 2
+  typing: 2
