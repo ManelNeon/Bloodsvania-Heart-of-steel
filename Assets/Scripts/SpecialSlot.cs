@@ -29,6 +29,8 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     //special's image
     Sprite specialImage;
 
+    int specialCost;
+
     //checking if the slot is full
     [HideInInspector] public bool isFull;
 
@@ -55,7 +57,7 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [SerializeField] TextMeshProUGUI specialDescriptionText;
 
     //code that adds a special, requires the name of the special, it's typing Code, the time it takes to use the special, its image and the description
-    public void AddSpecial(string specialName, int typingCode, float specialTime, Sprite specialImage, string specialDescription)
+    public void AddSpecial(string specialName, int typingCode, float specialTime, Sprite specialImage, string specialDescription, int specialCost)
     {
         //assigning the special's data to the spots
         this.specialName = specialName;
@@ -67,6 +69,8 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         this.specialImage = specialImage;
 
         this.specialDescription = specialDescription;
+
+        this.specialCost = specialCost;
 
         //it is now a full slot
         isFull = true;
@@ -130,7 +134,7 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
                 //the pause menu will deactivate, we will start a courotine with the special attack and we will disable the hand
                 GameManager.Instance.pauseMenu.SetActive(false);
                 GameManager.Instance.UpgradesNotAvailable();
-                GameManager.Instance.StartCoroutine(GameManager.Instance.SpecialAttack(specialName, typingCode, specialTime));
+                GameManager.Instance.StartCoroutine(GameManager.Instance.SpecialAttack(specialName, typingCode, specialTime, specialCost));
                 GameManager.Instance.DisablingHand();
             }
             //if the player right clicks while fighting

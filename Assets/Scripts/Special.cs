@@ -16,6 +16,8 @@ public class Special : MonoBehaviour
     //special's Description
     [SerializeField] string specialDescription;
 
+    [SerializeField] int specialCost;
+
     //special's image
     [TextArea] [SerializeField] Sprite specialImage;
 
@@ -24,6 +26,6 @@ public class Special : MonoBehaviour
     {
         SpecialManager manager = GameObject.Find("PlayerStatsHolder").GetComponent<SpecialManager>();
 
-        manager.AddSpecial(specialName, typingCode, specialTime, specialImage, specialDescription);
+        manager.AddSpecial(specialName, typingCode, specialTime, specialImage, specialDescription, specialCost);
     }
 }

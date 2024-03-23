@@ -6,16 +6,31 @@ using UnityEngine;
 //code that contains the item variables
 public class Item : MonoBehaviour
 {
+    [SerializeField] string itemName;
 
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] int quantity;
+
+    [SerializeField] Sprite itemSprite;
+
+    [TextArea][SerializeField] string itemDescription;
+
+    /*
+    1 - Healing
+    2 - Regening Blood
+    3 - Debuffing the enemy
+    */
+    [SerializeField] int itemCode;
+
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            GetItem();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void GetItem()
     {
-        
+        GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemName, quantity, itemSprite, itemDescription, itemCode);
     }
 }

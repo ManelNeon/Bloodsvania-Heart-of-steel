@@ -168,87 +168,100 @@ public class GameManager : MonoBehaviour
     }
 
     //code that plays when we use a special, we need it's name, it's typing and it's animation Time
-    public IEnumerator SpecialAttack(string specialName, int typing, float animationTime)
+    public IEnumerator SpecialAttack(string specialName, int typing, float animationTime, int specialCost)
     {
         if (playerTurn)
         {
-            //intializing the random multiplier
-            int randomMultiplier;
-
-            //intializing the attack value
-            int attack;
-
-            //random multiplier bigger if it is a special
-            randomMultiplier = Random.Range(5, 8);
-
-            //multiplying with the aptitude of the player instead of the attack
-            attack = playerStats.aptitude * randomMultiplier;
-
-            //changing the text on the attack panel
-            attackPanel.text = "Player has used " + specialName + "!!!";
-
-            yield return new WaitForSeconds(1);
-
-            //checking if it's super effective, also takes the mana away
-            if (SuperEffectiveCheck(typing))
+            if (specialCost <= playerStats.currentMana)
             {
-                //if it is super effective, multiply by 2
-                attack *= 2;
+                //intializing the random multiplier
+                int randomMultiplier;
+
+                //intializing the attack value
+                int attack;
+
+                //random multiplier bigger if it is a special
+                randomMultiplier = Random.Range(5, 8);
+
+                //taking the player's mana
+                playerStats.currentMana -= specialCost;
+
+                //multiplying with the aptitude of the player instead of the attack
+                attack = playerStats.aptitude * randomMultiplier;
 
                 //changing the text on the attack panel
-                attackPanel.text = specialName +" IS SUPER EFFECTIVE !!!";
+                attackPanel.text = "Player has used " + specialName + "!!!";
 
                 yield return new WaitForSeconds(1);
+
+                //checking if it's super effective, also takes the mana away
+                if (SuperEffectiveCheck(typing))
+                {
+                    //if it is super effective, multiply by 2
+                    attack *= 2;
+
+                    //changing the text on the attack panel
+                    attackPanel.text = specialName + " IS SUPER EFFECTIVE !!!";
+
+                    yield return new WaitForSeconds(1);
+                }
+
+                //changing the stats so that it shows how many mana he has now
+                InFightChangeStats();
+
+                //how much damage the special did
+                attackPanel.text = specialName + " dealt " + attack + " damage !!!";
+
+                playerTurn = false;
+
+                //here is where the animation will play
+
+                //waiting time for the animation to play (still no animation, just preparing for when I get them)
+                yield return new WaitForSeconds(animationTime);
+
+                SpecialEffects(randomMultiplier, true);
+
+                //waiting two seconds for the damage to apply for good measure
+                yield return new WaitForSeconds(2);
+
+                //applying damage to the enemy
+                enemyStats.Damage(attack);
+
+                //waiting just 0.1 seconds so that if the enemy is destroyed the code can recognize it after
+                yield return new WaitForSeconds(0.1f);
+
+                //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
+                if (enemy != null)
+                {
+                    attackPanel.text = "It's the enemy's turn now.";
+
+                    StartCoroutine(EnemyAttack());
+
+                    yield break;
+                }
+                //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
+                else
+                {
+                    attackPanel.text = "You have defeated the enemy!!";
+
+                    yield return new WaitForSeconds(1);
+
+                    playerStats.GetXP(enemyStats.xpDrop);
+
+                    attackPanel.text = "You got " + enemyStats.xpDrop + " XP!!";
+
+                    yield return new WaitForSeconds(1);
+
+                    ActivateWalkScene();
+
+                    yield break;
+                }
             }
-
-            //changing the stats so that it shows how many mana he has now
-            InFightChangeStats();
-
-            //how much damage the special did
-            attackPanel.text = specialName + " dealt " + attack + " damage !!!";
-
-            playerTurn = false;
-
-            //here is where the animation will play
-
-            //waiting time for the animation to play (still no animation, just preparing for when I get them)
-            yield return new WaitForSeconds(animationTime);
-
-            SpecialEffects(randomMultiplier, true);
-
-            //waiting two seconds for the damage to apply for good measure
-            yield return new WaitForSeconds(2);
-
-            //applying damage to the enemy
-            enemyStats.Damage(attack);
-
-            //waiting just 0.1 seconds so that if the enemy is destroyed the code can recognize it after
-            yield return new WaitForSeconds(0.1f);
-
-            //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
-            if (enemy != null)
-            {
-                attackPanel.text = "It's the enemy's turn now.";
-
-                StartCoroutine(EnemyAttack());
-
-                yield break;
-            }
-            //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
             else
             {
-                attackPanel.text = "You have defeated the enemy!!";
-
-                yield return new WaitForSeconds(1);
-
-                playerStats.GetXP(enemyStats.xpDrop);
-
-                attackPanel.text = "You got " + enemyStats.xpDrop + " XP!!";
-
-                yield return new WaitForSeconds(1);
-
-                ActivateWalkScene();
-
+                pauseMenu.SetActive(false);
+                attackPanel.text = "You need more blood for that spell...";
+                
                 yield break;
             }
         }
@@ -375,9 +388,6 @@ public class GameManager : MonoBehaviour
         {
             case 1:
 
-                //taking the mana off the player
-                playerStats.currentMana -= 25;
-
                 //checking if it's super effective
                 if (enemyStats.typing == 2 || enemyStats.typing == 3)
                 {
@@ -390,8 +400,6 @@ public class GameManager : MonoBehaviour
 
             case 2:
 
-                playerStats.currentMana -= 20;
-
                 if (enemyStats.typing == 3 || enemyStats.typing == 4)
                 {
                     return true;
@@ -400,8 +408,6 @@ public class GameManager : MonoBehaviour
                 return false;
 
             case 3:
-
-                playerStats.currentMana -= 15;
 
                 if (enemyStats.typing == 4 || enemyStats.typing == 5)
                 {
@@ -412,8 +418,6 @@ public class GameManager : MonoBehaviour
 
             case 4:
 
-                playerStats.currentMana -= 35;
-
                 if (enemyStats.typing == 5 || enemyStats.typing == 1)
                 {
                     return true;
@@ -422,8 +426,6 @@ public class GameManager : MonoBehaviour
                 return false;
 
             case 5:
-
-                playerStats.currentMana -= 20;
 
                 if (enemyStats.typing == 1 || enemyStats.typing == 2)
                 {

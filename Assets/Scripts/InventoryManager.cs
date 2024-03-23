@@ -9,13 +9,18 @@ public class InventoryManager : MonoBehaviour
 
 
     //adding a item, similar and identical to the special code
-    public void AddItem(string itemName, int quantity, Sprite itemSprite)
+    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode)
     {
         for (int i = 0; i < itemSlot.Length; i++)
         {
+            if (itemSlot[i].itemName == itemName)
+            {
+                itemSlot[i].quantity += quantity;
+                return;
+            }
             if (!itemSlot[i].isFull)
             {
-                itemSlot[i].AddItem(itemName, quantity, itemSprite);
+                itemSlot[i].AddItem(itemName, quantity, itemSprite, itemDescription, itemCode);
                 return;
             }
         }

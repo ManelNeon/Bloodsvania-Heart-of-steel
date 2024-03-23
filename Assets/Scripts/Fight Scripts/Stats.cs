@@ -19,7 +19,7 @@ public class Stats : MonoBehaviour
     public int maxMana;
 
     //player's current "mana"
-    [HideInInspector] public int currentMana;
+    public int currentMana;
 
     //player's attack stat
     public int attack;
