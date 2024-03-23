@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -161,10 +162,191 @@ public class GameManager : MonoBehaviour
         walkScene.SetActive(true);
     }
 
-    //code that will be called when we use an item
-    public IEnumerator UsingItem()
+    //in here we will check the item's code and play the corresponding sequence
+    public void UsingItem(int itemCode, string itemName, int effectQuantity)
     {
-        yield break;
+        switch (itemCode)
+        {
+            case 1:
+                StartCoroutine(HealingItemUsage(itemName, effectQuantity));
+                return;
+
+            case 2:
+                StartCoroutine(BloodItemUsage(itemName, effectQuantity));
+                return;
+
+            case 3:
+                StartCoroutine(DamageItemUsage(itemName, effectQuantity));
+                return;
+
+            default: 
+                break;
+        }
+    }
+
+    //the healing item code, we need the name of the item and the effect's quantity
+    IEnumerator HealingItemUsage(string itemName, int effectQuantity)
+    {
+        //checking if it's the player turn and the fight scene is active, if it is, use the item
+        if (playerTurn && fightScene.activeInHierarchy)
+        {
+            //changing the text on the attack panel
+            attackPanel.text = "Player has used a " + itemName + "!!!";
+
+            playerTurn = false;
+
+            yield return new WaitForSeconds(1.5f);
+
+            if (playerStats.currentHealth + effectQuantity > playerStats.maxHealth)
+            {
+                //checking the difference
+                int difference = playerStats.maxHealth - playerStats.currentHealth;
+
+                playerStats.currentHealth = playerStats.maxHealth;
+
+                attackPanel.text = "Player has healed for " + difference + "!!!";
+            }
+            else
+            {
+                playerStats.currentHealth += effectQuantity;
+
+                attackPanel.text = "Player has healed for " + effectQuantity + " !!!";
+
+            }
+
+            //changing the stats so that it shows how many mana he has now
+            InFightChangeStats();
+
+            StartCoroutine(EnemyAttack());
+
+            yield break;
+        }
+        else
+        {
+            //if it is not on the fight scene, the plyaer can still use the item, PUT IN HERE SOME EFFECT MANEL OF THE FUTURE
+
+            if (playerStats.currentHealth + effectQuantity > playerStats.maxHealth)
+            {
+                playerStats.currentHealth = playerStats.maxHealth;
+            }
+            else
+            {
+                playerStats.currentHealth += effectQuantity;
+            }
+
+            yield break;
+        }
+    }
+
+    //identical to the healing item, only this time it gives blood
+    IEnumerator BloodItemUsage(string itemName,int effectQuantity)
+    {
+        if (playerTurn && fightScene.activeInHierarchy)
+        {
+            //changing the text on the attack panel
+            attackPanel.text = "Player has used a " + itemName + "!!!";
+
+            playerTurn = false;
+
+            yield return new WaitForSeconds(1.5f);
+
+            if (playerStats.currentMana + effectQuantity > playerStats.maxMana)
+            {
+                int difference = playerStats.maxMana - playerStats.currentMana;
+
+                playerStats.currentMana = playerStats.maxMana;
+
+                attackPanel.text = "Player has recovered blood for " + difference + "!!!";
+            }
+            else
+            {
+                playerStats.currentMana += effectQuantity;
+
+                attackPanel.text = "Player has recovered blood for " + effectQuantity +" !!!";
+
+            }
+
+            //changing the stats so that it shows how many mana he has now
+            InFightChangeStats();
+
+            StartCoroutine(EnemyAttack());
+
+            yield break;
+        }
+        else
+        {
+            if (playerStats.currentMana + effectQuantity > playerStats.maxMana)
+            {
+                playerStats.currentMana = playerStats.maxMana;
+            }
+            else
+            {
+                playerStats.currentMana += effectQuantity;
+            }
+
+            yield break;
+        }
+    }
+
+
+    //the damaging item cant be used outside of combat, but in combat its a simplified version of the attack enemy code
+    IEnumerator DamageItemUsage(string itemName, int effectQuantity)
+    {
+        if (playerTurn && fightScene.activeInHierarchy)
+        {
+            //changing the text on the attack panel
+            attackPanel.text = "Player has used a " + itemName + "!!!";
+
+            playerTurn = false;
+
+            yield return new WaitForSeconds(1.5f);
+
+            attackPanel.text = "You dealt " + effectQuantity + " to the enemy !!!";
+
+            //we send zero instead of the random multiplier because the item never crits
+            SpecialEffects(0, true);
+
+            yield return new WaitForSeconds(1);
+
+            //applying damage to the enemy
+            enemyStats.Damage(effectQuantity);
+
+            //waiting just 0.1 seconds so that if the enemy is destroyed the code can recognize it after
+            yield return new WaitForSeconds(0.1f);
+
+            //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
+            if (enemy != null)
+            {
+                attackPanel.text = "It's the enemy's turn now.";
+
+                StartCoroutine(EnemyAttack());
+
+                yield break;
+            }
+            //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
+            else
+            {
+                attackPanel.text = "You have defeated the enemy!!";
+
+                yield return new WaitForSeconds(1);
+
+                playerStats.GetXP(enemyStats.xpDrop);
+
+                attackPanel.text = "You got " + enemyStats.xpDrop + " XP!!";
+
+                yield return new WaitForSeconds(1);
+
+                ActivateWalkScene();
+
+                yield break;
+            }
+        }
+        else
+        {
+            Debug.Log("Can't use damaging item outside of combat.");
+
+            yield break;
+        }
     }
 
     //code that plays when we use a special, we need it's name, it's typing and it's animation Time
@@ -192,6 +374,8 @@ public class GameManager : MonoBehaviour
                 //changing the text on the attack panel
                 attackPanel.text = "Player has used " + specialName + "!!!";
 
+                playerTurn = false;
+
                 yield return new WaitForSeconds(1);
 
                 //checking if it's super effective, also takes the mana away
@@ -211,8 +395,6 @@ public class GameManager : MonoBehaviour
 
                 //how much damage the special did
                 attackPanel.text = specialName + " dealt " + attack + " damage !!!";
-
-                playerTurn = false;
 
                 //here is where the animation will play
 

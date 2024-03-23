@@ -149,13 +149,9 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         }
         else
         {
-            //if the player left clicks while not fighting, we will show the details of the spell
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                ShowDescriptionBox();
+            ShowDescriptionBox();
 
-                GameManager.Instance.DisablingHand();
-            }
+            GameManager.Instance.DisablingHand();
         }
     }
 

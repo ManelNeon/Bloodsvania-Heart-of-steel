@@ -6,13 +6,17 @@ using UnityEngine;
 //code that contains the item variables
 public class Item : MonoBehaviour
 {
+    //the item's name
     [SerializeField] string itemName;
 
+    //the quantity of the item
     [SerializeField] int quantity;
 
+    //the sprite of the item
     [SerializeField] Sprite itemSprite;
 
-    [TextArea][SerializeField] string itemDescription;
+    //the quantity that the effect will do (how much healing, how much damage etc...)
+    [SerializeField] int effectQuantity;
 
     /*
     1 - Healing
@@ -21,16 +25,21 @@ public class Item : MonoBehaviour
     */
     [SerializeField] int itemCode;
 
+    //the description of the item
+    [TextArea][SerializeField] string itemDescription;
+
     private void Update()
     {
+        //debug only, to see if the items worked
         if (Input.GetKeyDown(KeyCode.X))
         {
             GetItem();
         }
     }
 
+    //code to get the item
     void GetItem()
     {
-        GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemName, quantity, itemSprite, itemDescription, itemCode);
+        GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemName, quantity, itemSprite, itemDescription, itemCode, effectQuantity);
     }
 }

@@ -2779,6 +2779,56 @@ RectTransform:
   m_AnchoredPosition: {x: -98, y: 2}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &659230249
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 659230251}
+  - component: {fileID: 659230250}
+  m_Layer: 0
+  m_Name: ItemTest (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &659230250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659230249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a613487ccfeecbc4c89ca4c231727850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Black Stone
+  quantity: 32
+  itemSprite: {fileID: 104770113, guid: d8a30d3e9d797e740908b3e454a04c35, type: 3}
+  effectQuantity: 200
+  itemCode: 3
+  itemDescription: The blackest of stones, look upon it and see Africa.
+--- !u!4 &659230251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659230249}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 397.0697, y: 419.36, z: -1.8461988}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &684158120
 GameObject:
   m_ObjectHideFlags: 0
@@ -9635,9 +9685,10 @@ MonoBehaviour:
   itemName: Potion
   quantity: 3
   itemSprite: {fileID: 985227874, guid: d8a30d3e9d797e740908b3e454a04c35, type: 3}
+  effectQuantity: 25
+  itemCode: 1
   itemDescription: A potion that will heal you, and cure you of all diseases except
     AIDS. AIDS is the strongest of enemies
-  itemCode: 1
 --- !u!1001 &1065058862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21652,3 +21703,4 @@ SceneRoots:
   - {fileID: 754791923}
   - {fileID: 376717366}
   - {fileID: 1053967171}
+  - {fileID: 659230251}

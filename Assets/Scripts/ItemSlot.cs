@@ -26,6 +26,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     */
     int itemCode;
 
+    int effectQuantity;
+
     [HideInInspector] public bool isFull;
 
     // ---- Item Slot ---- //
@@ -46,7 +48,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     [SerializeField] TextMeshProUGUI descriptionTitle;
 
-    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode)
+    //adding the item to the slot
+    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode, int effectQuantity)
     {
         this.itemName = itemName;
 
@@ -58,6 +61,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
         this.itemCode = itemCode;
 
+        this.effectQuantity = effectQuantity;
+
         isFull = true;
 
         quantityText.text = quantity.ToString();
@@ -66,6 +71,13 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         itemImage.sprite = itemSprite;
     }
 
+    //changing the quantity
+    public void ChangeQuantity()
+    {
+        quantityText.text = quantity.ToString();
+    }
+
+    //applying the description
     void ApplyDescription()
     {
         descriptionImage.sprite = itemSprite;
@@ -75,18 +87,68 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         descriptionTitle.text = itemName;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    private void Update()
     {
-        if (isFull)
+        //debug only, to check if erasing the item worked
+        if (Input.GetKeyDown(KeyCode.V))
         {
-            GameManager.Instance.DisablingHand();
-
-            descriptionBox.SetActive(true);
-
-            ApplyDescription();
+            EraseItem();
         }
     }
 
+    //event that plays when you press the item slot
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        //checks if it's full first
+        if (isFull)
+        {
+            //checks if it's a right or left click
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                //if it's item code is 3 (a damaging item) it will return early and not take the quantity off as damaging items cant be used outside of combat
+                if (!GameManager.Instance.playerTurn && itemCode == 3)
+                {
+                    GameManager.Instance.pauseMenu.SetActive(false);
+                    GameManager.Instance.UpgradesNotAvailable();
+                    GameManager.Instance.UsingItem(itemCode, itemName, effectQuantity);
+                    GameManager.Instance.DisablingHand();
+                    return;
+                }
+
+                //taking the quantity off and checking if it's zero, if it is earse the item
+                quantity--;
+                ChangeQuantity();
+                GameManager.Instance.pauseMenu.SetActive(false);
+                GameManager.Instance.UpgradesNotAvailable();
+                GameManager.Instance.UsingItem(itemCode, itemName, effectQuantity);
+                GameManager.Instance.DisablingHand();
+                if (quantity == 0)
+                {
+                    EraseItem();
+                }
+            }
+            //if the player right clicks, open the description box
+            if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                GameManager.Instance.DisablingHand();
+
+                descriptionBox.SetActive(true);
+
+                ApplyDescription();
+            }
+        }
+    }
+
+    //erasing the item, its not full, no sprite, no quantity text and no item name
+    public void EraseItem()
+    {
+        isFull = false;
+        itemImage.sprite = null;
+        quantityText.enabled = false;
+        itemName = "";
+    }
+
+    //checking if the pointer entered the item slot area, putting the hand there
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isFull)
@@ -97,6 +159,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
     }
 
+    //checking if the pointer exited the item slot area, taking the hand off "disabling it"
     public void OnPointerExit(PointerEventData eventData)
     {
         if (isFull)
