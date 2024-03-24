@@ -28,7 +28,11 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     int effectQuantity;
 
+    string itemEffect;
+
     [HideInInspector] public bool isFull;
+
+    bool isPlaying;
 
     // ---- Item Slot ---- //
 
@@ -37,6 +41,12 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     [SerializeField] Image itemImage;
 
     [SerializeField] Transform position;
+
+    [SerializeField] ButtonManager buttonManager;
+
+    [SerializeField] GameObject warningDisplay;
+
+    [SerializeField] TextMeshProUGUI warningText;
 
     // ---- Item Description ---- //
 
@@ -48,8 +58,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     [SerializeField] TextMeshProUGUI descriptionTitle;
 
+    [SerializeField] TextMeshProUGUI descriptionEffect;
+
     //adding the item to the slot
-    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode, int effectQuantity)
+    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode, int effectQuantity, string itemEffect)
     {
         this.itemName = itemName;
 
@@ -63,11 +75,14 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
         this.effectQuantity = effectQuantity;
 
+        this.itemEffect = itemEffect;
+
         isFull = true;
 
-        quantityText.text = quantity.ToString();
+        ChangeQuantity();
         quantityText.enabled = true;
 
+        itemImage.enabled = true;
         itemImage.sprite = itemSprite;
     }
 
@@ -85,6 +100,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         descriptionText.text = itemDescription;
 
         descriptionTitle.text = itemName;
+
+        descriptionEffect.text = itemEffect;
     }
 
     private void Update()
@@ -108,30 +125,31 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 //if it's item code is 3 (a damaging item) it will return early and not take the quantity off as damaging items cant be used outside of combat
                 if (!GameManager.Instance.playerTurn && itemCode == 3)
                 {
-                    GameManager.Instance.pauseMenu.SetActive(false);
-                    GameManager.Instance.UpgradesNotAvailable();
                     GameManager.Instance.UsingItem(itemCode, itemName, effectQuantity);
                     GameManager.Instance.DisablingHand();
+                    if (isPlaying)
+                    {
+                        StopCoroutine(WarningDisplayEvent());
+                    }
+                    buttonManager.StartCoroutine(WarningDisplayEvent());
+                    buttonManager.ResumeGame();
                     return;
                 }
 
                 //taking the quantity off and checking if it's zero, if it is earse the item
                 quantity--;
                 ChangeQuantity();
-                GameManager.Instance.pauseMenu.SetActive(false);
-                GameManager.Instance.UpgradesNotAvailable();
                 GameManager.Instance.UsingItem(itemCode, itemName, effectQuantity);
                 GameManager.Instance.DisablingHand();
                 if (quantity == 0)
                 {
                     EraseItem();
                 }
+                buttonManager.ResumeGame();
             }
             //if the player right clicks, open the description box
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                GameManager.Instance.DisablingHand();
-
                 descriptionBox.SetActive(true);
 
                 ApplyDescription();
@@ -139,10 +157,28 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
     }
 
+    IEnumerator WarningDisplayEvent()
+    {
+        isPlaying = true;
+
+        warningText.text = "You can't use damaging items outside of combat...";
+
+        warningDisplay.SetActive(true);
+
+        yield return new WaitForSeconds(3);
+
+        warningDisplay.SetActive(false);
+
+        isPlaying = false;
+
+        yield break;
+    }
+
     //erasing the item, its not full, no sprite, no quantity text and no item name
     public void EraseItem()
     {
         isFull = false;
+        itemImage.enabled = false;
         itemImage.sprite = null;
         quantityText.enabled = false;
         itemName = "";

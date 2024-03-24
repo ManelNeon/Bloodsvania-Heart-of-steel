@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.XR;
 
 //code for the special Slots on the UI, has a clicker, enter and exit event
 public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
@@ -37,10 +36,14 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     // -------- SPECIAL SLOT -------- //
 
     //text for the special
-    [SerializeField] TMP_Text specialText;
+    [SerializeField] TextMeshProUGUI specialText;
 
     //position to where the pointer will go
     [SerializeField] Transform postion;
+
+    [SerializeField] GameObject divider;
+
+    [SerializeField] ButtonManager buttonManager;
 
     // ------- SPECIAL DESCRIPTION ------ //
 
@@ -51,7 +54,9 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [SerializeField] Image spriteSlot;
 
     //object that will contain the name of the special attack
-    [SerializeField] TextMeshProUGUI specialNameText;
+    [SerializeField] TextMeshProUGUI specialTypeText;
+
+    [SerializeField] TextMeshProUGUI specialCostText;
 
     //object that will contain the description of the special attack
     [SerializeField] TextMeshProUGUI specialDescriptionText;
@@ -72,6 +77,8 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
         this.specialCost = specialCost;
 
+        divider.SetActive(true);
+
         //it is now a full slot
         isFull = true;
 
@@ -79,7 +86,7 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         AssignTyping(typingCode);
 
         //changing the text to the special's name and it's typing
-        specialText.text = specialName + " T: " + typing;
+        specialText.text = specialName;
 
         //enabling the text
         specialText.enabled = true;
@@ -132,8 +139,7 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
             if(eventData.button == PointerEventData.InputButton.Left)
             {
                 //the pause menu will deactivate, we will start a courotine with the special attack and we will disable the hand
-                GameManager.Instance.pauseMenu.SetActive(false);
-                GameManager.Instance.UpgradesNotAvailable();
+                buttonManager.DeactivateSpecials();
                 GameManager.Instance.StartCoroutine(GameManager.Instance.SpecialAttack(specialName, typingCode, specialTime, specialCost));
                 GameManager.Instance.DisablingHand();
             }
@@ -142,16 +148,11 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
             {
                 //we will show the description box
                 ShowDescriptionBox();
-
-                //disbaling the hand
-                GameManager.Instance.DisablingHand();
             }
         }
         else
         {
             ShowDescriptionBox();
-
-            GameManager.Instance.DisablingHand();
         }
     }
 
@@ -160,20 +161,19 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     {
         spriteSlot.sprite = specialImage;
 
-        specialNameText.text = specialName;
+        specialTypeText.text = typing;
+
+        specialCostText.text = specialCost.ToString();
 
         specialDescriptionText.text = specialDescription;
 
         descriptionBox.SetActive(true);
     }
 
-
     //putting the hand on the position I want it too, and setting its scale lower
     public void OnPointerEnter(PointerEventData eventData)
     {
         GameObject hand = GameObject.Find("Hand 1");
-
-        hand.transform.localScale = new Vector3(.73f, .73f, .73f);
 
         hand.transform.position = postion.position;
     }

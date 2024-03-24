@@ -15,6 +15,8 @@ public class Item : MonoBehaviour
     //the sprite of the item
     [SerializeField] Sprite itemSprite;
 
+    [Header("Good/Bad/Unknown")][SerializeField] string itemEffect;
+
     //the quantity that the effect will do (how much healing, how much damage etc...)
     [SerializeField] int effectQuantity;
 
@@ -40,6 +42,6 @@ public class Item : MonoBehaviour
     //code to get the item
     void GetItem()
     {
-        GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemName, quantity, itemSprite, itemDescription, itemCode, effectQuantity);
+        GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemName, quantity, itemSprite, itemDescription, itemCode, effectQuantity, itemEffect);
     }
 }

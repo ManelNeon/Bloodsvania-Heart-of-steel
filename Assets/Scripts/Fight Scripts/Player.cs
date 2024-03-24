@@ -13,6 +13,8 @@ public class Player : Stats
     //player's xp
     [HideInInspector] public int xp;
 
+    [SerializeField] Sprite playerSprite;
+
     //how much xp the player needs to level up
     [HideInInspector] public int xpForLevel;
 
@@ -36,6 +38,14 @@ public class Player : Stats
 
         //calculating the xp needed for the new level
         NewLevelXP();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LevelUp();
+        }
     }
 
     //getting xp, it's public because will be used outside this code probably

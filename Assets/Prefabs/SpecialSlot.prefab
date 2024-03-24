@@ -69,7 +69,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Beast's Blade
+  m_text: xxxx
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e01496d80591c1408f68c4cd95c3fba, type: 2}
   m_sharedMaterial: {fileID: 2090013105277763282, guid: 1e01496d80591c1408f68c4cd95c3fba, type: 2}
@@ -153,9 +153,11 @@ MonoBehaviour:
   isFull: 0
   specialText: {fileID: 8628157683952968558}
   postion: {fileID: 4295748437968179055}
+  divider: {fileID: 5945968017191494279}
   descriptionBox: {fileID: 0}
   spriteSlot: {fileID: 0}
-  specialNameText: {fileID: 0}
+  specialTypeText: {fileID: 0}
+  specialCostText: {fileID: 0}
   specialDescriptionText: {fileID: 0}
 --- !u!1 &4609277802631153604
 GameObject:

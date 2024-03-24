@@ -14,12 +14,20 @@ public class Special : MonoBehaviour
     [SerializeField] float specialTime;
 
     //special's Description
-    [SerializeField] string specialDescription;
+    [TextArea][SerializeField] string specialDescription;
 
     [SerializeField] int specialCost;
 
     //special's image
-    [TextArea] [SerializeField] Sprite specialImage;
+    [SerializeField] Sprite specialImage;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            LearnSpecial();
+        }
+    }
 
     //code to call when we want to learn the new special
     void LearnSpecial()

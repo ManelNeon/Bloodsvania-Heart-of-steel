@@ -7,8 +7,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    // ---- Game Instance ---- //
+
     // creating a static Instance
     public static GameManager Instance;
+
+    // ---- Game Scenes ---- //
 
     //getting the fight scene
     [SerializeField] GameObject fightScene;
@@ -16,11 +20,17 @@ public class GameManager : MonoBehaviour
     //getting the walk scene
     [SerializeField] GameObject walkScene;
 
-    //getting the pause menu
-    public GameObject pauseMenu;
+    // ---- In Game Necessities ---- //
 
-    //getting the buttons that up the skills
-    [SerializeField] GameObject skillButtons;
+    //getting the pause menu
+    [SerializeField] GameObject pauseMenu;
+
+    [SerializeField] TextMeshProUGUI warningDisplayText;
+
+    [SerializeField] GameObject warningDisplay;
+
+    //getting the buttonManager
+    [SerializeField] ButtonManager buttonManager;
 
     //getting the player game object
     [SerializeField] GameObject player;
@@ -37,20 +47,31 @@ public class GameManager : MonoBehaviour
     //getting the panel where we inform the player what's happening on screen
     [SerializeField] TextMeshProUGUI attackPanel;
 
-    //the display that shows the enemies we're fighting on the fight scene
-    [SerializeField] TextMeshProUGUI enemiesDisplay;
-
     //the display that shows the player's party
-    [SerializeField] TextMeshProUGUI playerDisplay;
+    [SerializeField] TextMeshProUGUI playerNameDisplay;
+
+    [SerializeField] TextMeshProUGUI playerHPDisplay;
+
+    [SerializeField] TextMeshProUGUI playerBloodDisplay;
+
+    //the display that shows the enemies we're fighting on the fight scene
+    [SerializeField] TextMeshProUGUI[] enemiesDisplayName;
+
+    [SerializeField] TextMeshProUGUI[] enemiesDisplayType;
 
     //getting the enemy prefabs
     [SerializeField] GameObject[] enemyPrefabs;
 
     //gameobject that will store the enemy instantiated in the fight scene
-    GameObject enemy;
+    GameObject[] enemy = new GameObject[4];
+
+    //the position the enemies can take
+    [SerializeField] Transform[] enemyPositions;
 
     //stats from the enemy instantiated
-    Enemy enemyStats;
+    Enemy[] enemyStats = new Enemy[4];
+
+    int enemyCount;
 
     //cheking if it is or not the player's turn
     [HideInInspector] public bool playerTurn;
@@ -77,19 +98,13 @@ public class GameManager : MonoBehaviour
         //if the player clicks escape, activate or deactivate the pause menu
         if (Input.GetKeyDown(KeyCode.Escape) && walkScene.activeInHierarchy)
         {
-            if (pauseMenu.activeInHierarchy)
-            {
-                //code that deactivates the hand, necessary in case the mouse is on top of a button
-                DisablingHand();
-                pauseMenu.SetActive(false);
-            }
-            else if (!pauseMenu.activeInHierarchy)
+            if (!pauseMenu.activeInHierarchy)
             {
                 pauseMenu.SetActive(true);
-                //checking if the upgrades are available
-                UpgradesNotAvailable();
-                //changing the stats according to the player
-                ChangeStats();
+            }
+            else if (pauseMenu.activeInHierarchy)
+            {
+                buttonManager.ResumeGame();
             }
         } 
     }
@@ -104,43 +119,39 @@ public class GameManager : MonoBehaviour
         hand.transform.position = new Vector3(-694f, -658f, 0);
     }
 
-    //code that checks if the player has any skillpoints, if he hasn't, deactivate the upgrade skill buttons
-    public void UpgradesNotAvailable()
+    //activating the walk scene and deactivating the fight scene
+    public void ActivateWalkScene()
     {
-        if (player.GetComponent<Player>().skillPoint == 0)
-        {
-            skillButtons.SetActive(false);
-        }
-        else
-        {
-            skillButtons.SetActive(true);
-        }
-    }
-    
-    /*Changing the stats on the pause menu, finding all the stats on the main menu and changing the stats, because this ideally only plays when the player
-    is on the main menu, no need to reference the objects on the variables */
-    public void ChangeStats()
-    {
-        GameObject.Find("LevelStat").GetComponent<TextMeshProUGUI>().text = "Level - " + playerStats.level; 
-        GameObject.Find("AttackStat").GetComponent<TextMeshProUGUI>().text = "Attack - " + playerStats.attack;
-        GameObject.Find("HealthStat").GetComponent<TextMeshProUGUI>().text = "Health - " + playerStats.maxHealth;
-        GameObject.Find("ManaStat").GetComponent<TextMeshProUGUI>().text = "Blood - " + playerStats.maxMana;
-        GameObject.Find("ApptitudeStat").GetComponent<TextMeshProUGUI>().text = "Apptitude - " + playerStats.aptitude;
-        GameObject.Find("XpStat").GetComponent<TextMeshProUGUI>().text =  playerStats.xp + " / " + playerStats.xpForLevel;
+        fightScene.SetActive(false);
+        walkScene.SetActive(true);
     }
 
     //activating the fight scene and deactivating the walk scene
-    public void ActivateFightScene(int enemyCode)
+    public void ActivateFightScene(int enemyCode, int enemyCount)
     {
-        walkScene.SetActive(false); 
+        buttonManager.ResumeGame();
         fightScene.SetActive(true);
 
-        //instantiating the enemy, on the coordinates where he's on screen, with the enemycode that every enemyprefab has, then getting the required components
-        enemy = Instantiate(enemyPrefabs[enemyCode], new Vector3(44.9f, 2.2f), enemyPrefabs[enemyCode].transform.rotation);
-        enemyStats = enemy.GetComponent<Enemy>();
+        this.enemyCount = enemyCount;
 
-        //changing the enemies display
-        enemiesDisplay.text = "- " + enemyStats.userName;
+        walkScene.SetActive(false);
+
+        for (int i = 0; i < this.enemyCount; i++)
+        {
+            //instantiating the enemy, on the coordinates where he's on screen, with the enemycode that every enemyprefab has, then getting the required components
+            enemy[i] = Instantiate(enemyPrefabs[enemyCode], enemyPositions[i].position, enemyPrefabs[enemyCode].transform.rotation);
+            enemyStats[i] = enemy[i].GetComponent<Enemy>();
+
+            //changing the enemies display
+
+            int numberEnemy = i + 1;
+            enemiesDisplayName[i].text = "- " + enemyStats[i].userName + " " + numberEnemy;
+            string type = Type(enemyStats[i].typing);
+            enemiesDisplayType[i].text = type;
+            enemiesDisplayName[i].gameObject.SetActive(true);
+        }
+
+        attackPanel.text = "It's your turn now.";
 
         //changing the players display text
         InFightChangeStats();
@@ -149,17 +160,37 @@ public class GameManager : MonoBehaviour
         playerTurn = true;
     }
 
+    string Type(int typeCode)
+    {
+        switch (typeCode)
+        {
+            case 1:
+                return "Savage";
+
+            case 2:
+                return "Machine";
+
+            case 3:
+                return "Human";
+
+            case 4:
+                return "Fulgurite";
+
+            case 5:
+                return "Nature";
+            default:
+                return null;
+        }
+    }
+
     //code that changes the player's display text
     void InFightChangeStats()
     {
-        playerDisplay.text = "- "+ playerStats.userName +"    "+ playerStats.currentHealth +"/" + playerStats.maxHealth + "     " + playerStats.currentMana + "/" + playerStats.maxMana;
-    }
+        playerNameDisplay.text = playerStats.userName;
 
-    //activating the walk scene and deactivating the fight scene
-    public void ActivateWalkScene()
-    {
-        fightScene.SetActive(false);
-        walkScene.SetActive(true);
+        playerHPDisplay.text = playerStats.currentHealth + "/" + playerStats.maxHealth;
+
+        playerBloodDisplay.text = playerStats.currentMana + "/" + playerStats.maxMana;
     }
 
     //in here we will check the item's code and play the corresponding sequence
@@ -227,12 +258,26 @@ public class GameManager : MonoBehaviour
 
             if (playerStats.currentHealth + effectQuantity > playerStats.maxHealth)
             {
+                int difference = playerStats.maxHealth - playerStats.currentHealth;
+
                 playerStats.currentHealth = playerStats.maxHealth;
+
+                warningDisplay.SetActive(true);
+
+                warningDisplayText.text = "You have healed for " + difference + "!!!";
             }
             else
             {
                 playerStats.currentHealth += effectQuantity;
+
+                warningDisplay.SetActive(true);
+
+                warningDisplayText.text = "You have healed for " + effectQuantity + " !!!";
             }
+
+            yield return new WaitForSeconds(3);
+
+            warningDisplay.SetActive(false);
 
             yield break;
         }
@@ -288,7 +333,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     //the damaging item cant be used outside of combat, but in combat its a simplified version of the attack enemy code
     IEnumerator DamageItemUsage(string itemName, int effectQuantity)
     {
@@ -308,14 +352,18 @@ public class GameManager : MonoBehaviour
 
             yield return new WaitForSeconds(1);
 
-            //applying damage to the enemy
-            enemyStats.Damage(effectQuantity);
+            //temporary implementation, because I Know that for now there's always only one enemy, no need to make for cycles in here
+            int i = 0;
+
+            //applying damage to enemies
+            enemyStats[i].Damage(effectQuantity);
+            
 
             //waiting just 0.1 seconds so that if the enemy is destroyed the code can recognize it after
             yield return new WaitForSeconds(0.1f);
 
             //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
-            if (enemy != null)
+            if (enemy[i] != null)
             {
                 attackPanel.text = "It's the enemy's turn now.";
 
@@ -330,9 +378,9 @@ public class GameManager : MonoBehaviour
 
                 yield return new WaitForSeconds(1);
 
-                playerStats.GetXP(enemyStats.xpDrop);
+                playerStats.GetXP(enemyStats[i].xpDrop);
 
-                attackPanel.text = "You got " + enemyStats.xpDrop + " XP!!";
+                attackPanel.text = "You got " + enemyStats[i].xpDrop + " XP!!";
 
                 yield return new WaitForSeconds(1);
 
@@ -378,14 +426,29 @@ public class GameManager : MonoBehaviour
 
                 yield return new WaitForSeconds(1);
 
-                //checking if it's super effective, also takes the mana away
-                if (SuperEffectiveCheck(typing))
+                //temporary
+                int i = 0;
+
+                int checkSuperEffect = SuperEffectiveCheck(typing, i);
+
+                //checking if it's super effective
+                if (checkSuperEffect == 1)
                 {
                     //if it is super effective, multiply by 2
                     attack *= 2;
 
                     //changing the text on the attack panel
                     attackPanel.text = specialName + " IS SUPER EFFECTIVE !!!";
+
+                    yield return new WaitForSeconds(1);
+                }
+                else if (checkSuperEffect == 2)
+                {
+                    //if it is not super effective, divide by 2
+                    attack /= 2;
+
+                    //changing the text on the attack panel
+                    attackPanel.text = specialName + " is not very effective.... !!!";
 
                     yield return new WaitForSeconds(1);
                 }
@@ -407,13 +470,13 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(2);
 
                 //applying damage to the enemy
-                enemyStats.Damage(attack);
+                enemyStats[i].Damage(attack);
 
                 //waiting just 0.1 seconds so that if the enemy is destroyed the code can recognize it after
                 yield return new WaitForSeconds(0.1f);
 
                 //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
-                if (enemy != null)
+                if (enemy[i] != null)
                 {
                     attackPanel.text = "It's the enemy's turn now.";
 
@@ -428,9 +491,9 @@ public class GameManager : MonoBehaviour
 
                     yield return new WaitForSeconds(1);
 
-                    playerStats.GetXP(enemyStats.xpDrop);
+                    playerStats.GetXP(enemyStats[i].xpDrop);
 
-                    attackPanel.text = "You got " + enemyStats.xpDrop + " XP!!";
+                    attackPanel.text = "You got " + enemyStats[i].xpDrop + " XP!!";
 
                     yield return new WaitForSeconds(1);
 
@@ -441,7 +504,8 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                pauseMenu.SetActive(false);
+                buttonManager.ResumeGame();
+
                 attackPanel.text = "You need more blood for that spell...";
                 
                 yield break;
@@ -458,7 +522,6 @@ public class GameManager : MonoBehaviour
     {
         if (playerTurn)
         {
-
             //intializing the random multiplier
             int randomMultiplier;
 
@@ -488,14 +551,17 @@ public class GameManager : MonoBehaviour
             //waiting two seconds for the damage to apply for good measure
             yield return new WaitForSeconds(2);
 
+            //temporary
+            int i = 0;
+
             //applying damage to the enemy
-            enemyStats.Damage(attack);
+            enemyStats[i].Damage(attack);
 
             //waiting just 0.1 seconds so that if the enemy is destroyed the code can recognize it after
             yield return new WaitForSeconds(0.1f);
 
             //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
-            if (enemy != null)
+            if (enemy[i] != null)
             {
                 attackPanel.text = "It's the enemy's turn now.";
 
@@ -510,9 +576,9 @@ public class GameManager : MonoBehaviour
 
                 yield return new WaitForSeconds(1);
 
-                playerStats.GetXP(enemyStats.xpDrop);
+                playerStats.GetXP(enemyStats[i].xpDrop);
 
-                attackPanel.text = "You got " + enemyStats.xpDrop + " XP!!";
+                attackPanel.text = "You got " + enemyStats[i].xpDrop + " XP!!";
 
                 yield return new WaitForSeconds(1);
 
@@ -537,7 +603,10 @@ public class GameManager : MonoBehaviour
         //getting a random multiplier to multiply with the enemies attack
         int randomMultiplier = Random.Range(1, 4);
 
-        int attack = enemyStats.attack * randomMultiplier;
+        //temporary
+        int i = 0;
+
+        int attack = enemyStats[i].attack * randomMultiplier;
 
         //showing the player how much damage he did
         attackPanel.text = "The enemy has attacked for " + attack + " !!!";
@@ -564,61 +633,93 @@ public class GameManager : MonoBehaviour
     }
     
     //function that needs the special code, and with a switch case, takes the mana off and returns true if it's super effective or false if it isn't
-    bool SuperEffectiveCheck(int specialCode)
+    int SuperEffectiveCheck(int specialCode, int i)
     {
         switch (specialCode)
         {
             case 1:
 
                 //checking if it's super effective
-                if (enemyStats.typing == 2 || enemyStats.typing == 3)
+                if (enemyStats[i].typing == 2 || enemyStats[i].typing == 3)
                 {
-                    //if it is returns true
-                    return true;
+                    //if it is returns 1
+                    return 1;
                 }
-
-                //if it isnt returns false
-                return false;
+                if (enemyStats[i].typing == 5 || enemyStats[i].typing == 4)
+                {
+                    //if it is not very effective return 2
+                    return 2;
+                }
+                //else return 3
+                return 3;
 
             case 2:
 
-                if (enemyStats.typing == 3 || enemyStats.typing == 4)
+                //checking if it's super effective
+                if (enemyStats[i].typing == 3 || enemyStats[i].typing == 4)
                 {
-                    return true;
+                    //if it is returns 1
+                    return 1;
                 }
-
-                return false;
+                if (enemyStats[i].typing == 1 || enemyStats[i].typing == 5)
+                {
+                    //if it is not very effective return 2
+                    return 2;
+                }
+                //else return 3
+                return 3;
 
             case 3:
 
-                if (enemyStats.typing == 4 || enemyStats.typing == 5)
+                //checking if it's super effective
+                if (enemyStats[i].typing == 4 || enemyStats[i].typing == 5)
                 {
-                    return true;
+                    //if it is returns 1
+                    return 1;
                 }
-
-                return false;
+                if (enemyStats[i].typing == 1 || enemyStats[i].typing == 2)
+                {
+                    //if it is not very effective return 2
+                    return 2;
+                }
+                //else return 3
+                return 3;
 
             case 4:
 
-                if (enemyStats.typing == 5 || enemyStats.typing == 1)
+                //checking if it's super effective
+                if (enemyStats[i].typing == 5 || enemyStats[i].typing == 1)
                 {
-                    return true;
+                    //if it is returns 1
+                    return 1;
                 }
-
-                return false;
+                if (enemyStats[i].typing == 2 || enemyStats[i].typing == 3)
+                {
+                    //if it is not very effective return 2
+                    return 2;
+                }
+                //else return 3
+                return 3;
 
             case 5:
 
-                if (enemyStats.typing == 1 || enemyStats.typing == 2)
+                //checking if it's super effective
+                if (enemyStats[i].typing == 1 || enemyStats[i].typing == 2)
                 {
-                    return true;
+                    //if it is returns 1
+                    return 1;
                 }
-
-                return false;
+                if (enemyStats[i].typing == 3 || enemyStats[i].typing == 4)
+                {
+                    //if it is not very effective return 2
+                    return 2;
+                }
+                //else return 3
+                return 3;
 
             default:
 
-                return false;
+                return 3;
         }
     }
 
@@ -628,9 +729,12 @@ public class GameManager : MonoBehaviour
         //if it is the player attacking, the crit effect will play when the multiplier is 5 or more and teleporting the effects to the enemies location
         if (isPlayerAttack)
         {
-            critEffect.transform.position = new Vector3(44.9f, 2.2f);
+            for (int i = 0; i < enemyCount; i++)
+            {
+                critEffect.transform.position = enemyPositions[i].position;
 
-            damageEffect.transform.position = new Vector3(44.9f, 2.2f);
+                damageEffect.transform.position = enemyPositions[i].position;
+            }
 
             if (randomMultiplier > 4)
             {
@@ -642,9 +746,9 @@ public class GameManager : MonoBehaviour
         //if it is the enemy attacking, the crit effect will play when the multiplier is 3 or more and teleport the effects to the players location
         else
         {
-            critEffect.transform.position = new Vector3(61.6f, 2.2f);
+            critEffect.transform.position = new Vector3(60.56f, 1.05f);
 
-            damageEffect.transform.position = new Vector3(61.6f, 2.2f);
+            damageEffect.transform.position = new Vector3(60.56f, 1.05f);
 
             if (randomMultiplier > 2)
             {

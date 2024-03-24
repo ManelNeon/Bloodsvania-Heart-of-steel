@@ -9,7 +9,7 @@ public class InventoryManager : MonoBehaviour
 
 
     //adding a item, similar and identical to the special code
-    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode, int effectQuantity)
+    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode, int effectQuantity, string itemEffect)
     {
         for (int i = 0; i < itemSlot.Length; i++)
         {
@@ -22,7 +22,7 @@ public class InventoryManager : MonoBehaviour
             }
             if (!itemSlot[i].isFull)
             {
-                itemSlot[i].AddItem(itemName, quantity, itemSprite, itemDescription, itemCode, effectQuantity);
+                itemSlot[i].AddItem(itemName, quantity, itemSprite, itemDescription, itemCode, effectQuantity, itemEffect);
                 return;
             }
         }
