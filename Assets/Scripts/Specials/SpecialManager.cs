@@ -33,4 +33,13 @@ public class SpecialManager : MonoBehaviour
 
         return false;
     }
+
+    public SpecialSlot GettingSpecials(int i)
+    {
+        if (specialSlots[i].isFull)
+        {
+            return specialSlots[i];
+        }
+        return null;
+    }
 }
