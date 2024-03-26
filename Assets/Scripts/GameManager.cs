@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
     //getting the pause menu
     [SerializeField] GameObject pauseMenu;
 
+    [SerializeField] GameObject dialogueMenu;
+
+    [SerializeField] GameObject shopMenu;
+
     [SerializeField] TextMeshProUGUI warningDisplayText;
 
     [SerializeField] GameObject warningDisplay;
@@ -98,17 +102,24 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //if the player clicks escape, activate or deactivate the pause menu
-        if (Input.GetKeyDown(KeyCode.Escape) && walkScene.activeInHierarchy)
+        if (Input.GetKeyDown(KeyCode.Escape) && walkScene.activeInHierarchy && !dialogueMenu.activeInHierarchy && !shopMenu.activeInHierarchy)
         {
             if (!pauseMenu.activeInHierarchy)
             {
                 pauseMenu.SetActive(true);
+                UnlockingMouse();
             }
             else if (pauseMenu.activeInHierarchy)
             {
                 buttonManager.ResumeGame();
             }
         } 
+    }
+
+    public void UnlockingMouse()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void SideQuestComplete(string questName, int questReward)
@@ -149,6 +160,7 @@ public class GameManager : MonoBehaviour
     //activating the walk scene and deactivating the fight scene
     public void ActivateWalkScene()
     {
+        DisablingHand();
         fightScene.SetActive(false);
         walkScene.SetActive(true);
     }
@@ -157,6 +169,7 @@ public class GameManager : MonoBehaviour
     public void ActivateFightScene(int enemyCode, int enemyCount)
     {
         buttonManager.ResumeGame();
+        UnlockingMouse();
         fightScene.SetActive(true);
 
         this.enemyCount = enemyCount;
@@ -272,13 +285,13 @@ public class GameManager : MonoBehaviour
 
             attackPanel.text = "";
 
+            playerTurn = false;
+
             foreach (char c in text)
             {
                 attackPanel.text += c;
                 yield return new WaitForSeconds(textSpeed);
             }
-
-            playerTurn = false;
 
             yield return new WaitForSeconds(1.5f);
 
@@ -378,6 +391,8 @@ public class GameManager : MonoBehaviour
             //changing the text on the attack panel
             string text = "Player has used a " + itemName + "!!!";
 
+            playerTurn = false;
+
             attackPanel.text = "";
 
             foreach (char c in text)
@@ -385,8 +400,6 @@ public class GameManager : MonoBehaviour
                 attackPanel.text += c;
                 yield return new WaitForSeconds(textSpeed);
             }
-
-            playerTurn = false;
 
             yield return new WaitForSeconds(1.5f);
 
@@ -474,6 +487,8 @@ public class GameManager : MonoBehaviour
             //changing the text on the attack panel
             string text = "Player has used a " + itemName + "!!!";
 
+            playerTurn = false;
+
             attackPanel.text = "";
 
             foreach (char c in text)
@@ -481,8 +496,6 @@ public class GameManager : MonoBehaviour
                 attackPanel.text += c;
                 yield return new WaitForSeconds(textSpeed);
             }
-
-            playerTurn = false;
 
             yield return new WaitForSeconds(1.5f);
 
@@ -595,6 +608,8 @@ public class GameManager : MonoBehaviour
                 //intializing the attack value
                 int attack;
 
+                playerTurn = false;
+
                 //random multiplier bigger if it is a special
                 randomMultiplier = Random.Range(5, 8);
 
@@ -614,8 +629,6 @@ public class GameManager : MonoBehaviour
                     attackPanel.text += c;
                     yield return new WaitForSeconds(textSpeed);
                 }
-
-                playerTurn = false;
 
                 yield return new WaitForSeconds(1);
 
@@ -791,6 +804,9 @@ public class GameManager : MonoBehaviour
             //intializing the attack value
             int attack;
 
+            //the player's turn is false
+            playerTurn = false;
+
             //randomizing the multiplier
             randomMultiplier = Random.Range(1, 6);
             
@@ -807,9 +823,6 @@ public class GameManager : MonoBehaviour
                 attackPanel.text += c;
                 yield return new WaitForSeconds(textSpeed);
             }
-
-            //the player's turn is false
-            playerTurn = false;
 
             //Here is where the animation will play
 
@@ -939,22 +952,29 @@ public class GameManager : MonoBehaviour
 
         InFightChangeStats();
 
-        yield return new WaitForSeconds(2);
-
-        //its the player turn now after 2 seconds
-        playerTurn = true;
-
-        text = "Its your turn now!";
-
-        attackPanel.text = "";
-
-        foreach (char c in text)
+        if (playerStats.isDead)
         {
-            attackPanel.text += c;
-            yield return new WaitForSeconds(textSpeed);
+            yield break;
         }
+        else
+        {
+            yield return new WaitForSeconds(2);
 
-        yield break;
+            //its the player turn now after 2 seconds
+            playerTurn = true;
+
+            text = "Its your turn now!";
+
+            attackPanel.text = "";
+
+            foreach (char c in text)
+            {
+                attackPanel.text += c;
+                yield return new WaitForSeconds(textSpeed);
+            }
+
+            yield break;
+        }
     }
     
     //function that needs the special code, and with a switch case, takes the mana off and returns true if it's super effective or false if it isn't
