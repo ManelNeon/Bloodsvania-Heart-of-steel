@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6da9c61445f4a06478efb7cd88e6fcf1
+guid: eace5fa429d87af4a8889369573dc667
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,7 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Hema_Sprite_0
+      name: hema_walking_front_animation_0
       rect:
         serializedVersion: 2
         x: 8
@@ -137,8 +137,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 919ae6079d3ba6a458312a5f67069275
-      internalID: -1712256733
+      spriteID: 82a3a438f9720b1438c35b1e9c51db25
+      internalID: 2120551489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hema_walking_front_animation_1
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 5
+        width: 16
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29bc1814ed5943b4896b6c391ac0ff33
+      internalID: 2064928813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hema_walking_front_animation_2
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 5
+        width: 16
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4257a5c3dd055e24c91dfed16018596a
+      internalID: 1561331667
       vertices: []
       indices: 
       edges: []
@@ -147,14 +189,16 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Hema_Sprite_0: -1712256733
+      hema_walking_front_animation_0: 2120551489
+      hema_walking_front_animation_1: 2064928813
+      hema_walking_front_animation_2: 1561331667
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

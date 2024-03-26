@@ -20,6 +20,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     string itemDescription;
 
     /*
+    0 - Key Item
     1 - Healing
     2 - Regening Blood
     3 - Debuffing the enemy
@@ -125,13 +126,27 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 //if it's item code is 3 (a damaging item) it will return early and not take the quantity off as damaging items cant be used outside of combat
                 if (!GameManager.Instance.playerTurn && itemCode == 3)
                 {
-                    GameManager.Instance.UsingItem(itemCode, itemName, effectQuantity);
                     GameManager.Instance.DisablingHand();
                     if (isPlaying)
                     {
                         StopCoroutine(WarningDisplayEvent());
+                        isPlaying = false;
                     }
                     buttonManager.StartCoroutine(WarningDisplayEvent());
+                    buttonManager.ResumeGame();
+                    return;
+                }
+
+                if (itemCode == 0)
+                {
+                    GameManager.Instance.UsingItem(itemCode, itemName, effectQuantity);
+                    GameManager.Instance.DisablingHand();
+                    if (isPlaying)
+                    {
+                        StopCoroutine(WarningDisplayKeyItem());
+                        isPlaying = false;
+                    }
+                    buttonManager.StartCoroutine(WarningDisplayKeyItem());
                     buttonManager.ResumeGame();
                     return;
                 }
@@ -157,13 +172,69 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
     }
 
+    IEnumerator WarningDisplayKeyItem()
+    {
+        isPlaying = true;
+
+        string text = "You can't use key items...";
+
+        if (GameManager.Instance.playerTurn)
+        {
+            warningDisplay.SetActive(true);
+
+            warningText.text = "";
+
+            foreach (char c in text)
+            {
+                warningText.text += c;
+                yield return new WaitForSeconds(GameManager.Instance.textSpeed);
+            }
+
+            yield return new WaitForSeconds(3);
+
+            warningDisplay.SetActive(false);
+
+            isPlaying = false;
+
+            yield break;
+        }
+        else
+        {
+            warningDisplay.SetActive(true);
+
+            warningText.text = "";
+
+            foreach (char c in text)
+            {
+                warningText.text += c;
+                yield return new WaitForSeconds(GameManager.Instance.textSpeed);
+            }
+
+            yield return new WaitForSeconds(3);
+
+            warningDisplay.SetActive(false);
+
+            isPlaying = false;
+
+            yield break;
+        }
+    }
+
     IEnumerator WarningDisplayEvent()
     {
         isPlaying = true;
 
-        warningText.text = "You can't use damaging items outside of combat...";
-
         warningDisplay.SetActive(true);
+
+        string text = "You can't use damaging items outside of combat...";
+
+        warningText.text = "";
+
+        foreach (char c in text)
+        {
+            warningText.text += c;
+            yield return new WaitForSeconds(GameManager.Instance.textSpeed);
+        }
 
         yield return new WaitForSeconds(3);
 

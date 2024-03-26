@@ -15,6 +15,8 @@ public class Player : Stats
 
     [SerializeField] Sprite playerSprite;
 
+    [HideInInspector] public int gold;
+
     //how much xp the player needs to level up
     [HideInInspector] public int xpForLevel;
 

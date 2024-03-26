@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6da9c61445f4a06478efb7cd88e6fcf1
+guid: 514c10aeaedbce144aa3a1bec46f89bf
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,10 +123,31 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Hema_Sprite_0
+      name: hema_tras-animation-sheet_0
       rect:
         serializedVersion: 2
         x: 8
+        y: 5
+        width: 17
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 924bcf73bc740ec4eb2f26f33ecd2366
+      internalID: 825309691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hema_tras-animation-sheet_1
+      rect:
+        serializedVersion: 2
+        x: 40
         y: 5
         width: 16
         height: 24
@@ -137,8 +158,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 919ae6079d3ba6a458312a5f67069275
-      internalID: -1712256733
+      spriteID: d6d85dbd5a8f5df4e8b055c34194c1a1
+      internalID: 688325022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hema_tras-animation-sheet_2
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 5
+        width: 16
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef63a5f6a73cfcb4994f8280bc1ff922
+      internalID: 1363715002
       vertices: []
       indices: 
       edges: []
@@ -147,14 +189,16 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Hema_Sprite_0: -1712256733
+      hema_tras-animation-sheet_0: 825309691
+      hema_tras-animation-sheet_1: 688325022
+      hema_tras-animation-sheet_2: 1363715002
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

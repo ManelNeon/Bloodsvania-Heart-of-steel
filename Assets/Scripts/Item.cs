@@ -21,6 +21,7 @@ public class Item : MonoBehaviour
     [SerializeField] int effectQuantity;
 
     /*
+    0 - Key Item
     1 - Healing
     2 - Regening Blood
     3 - Debuffing the enemy
@@ -43,5 +44,14 @@ public class Item : MonoBehaviour
     void GetItem()
     {
         GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemName, quantity, itemSprite, itemDescription, itemCode, effectQuantity, itemEffect);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            GetItem();
+            Destroy(gameObject);
+        }
     }
 }

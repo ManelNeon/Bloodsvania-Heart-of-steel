@@ -7,6 +7,8 @@ public class Enemy : Stats
     //the xp that the enemy will drop
     public int xpDrop;
 
+    public int goldDrop;
+
     /* 1 - Savage (strong against 2 and 3)
        2 - Machines (strong against 3 and 4)
        3 - Humans (strong agains 4 and 5)

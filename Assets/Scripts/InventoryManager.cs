@@ -28,4 +28,16 @@ public class InventoryManager : MonoBehaviour
         }
         Debug.Log("Inventory Full");
     }
+
+    public bool LookForItem(string itemName)
+    {
+        for (int i = 0; i < itemSlot.Length; i++)
+        {
+            if (itemSlot[i].itemName == itemName)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

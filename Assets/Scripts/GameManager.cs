@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject warningDisplay;
 
+    public float textSpeed;
+
     //getting the buttonManager
     [SerializeField] ButtonManager buttonManager;
 
@@ -107,6 +109,31 @@ public class GameManager : MonoBehaviour
                 buttonManager.ResumeGame();
             }
         } 
+    }
+
+    public void SideQuestComplete(string questName, int questReward)
+    {
+        warningDisplay.SetActive(true);
+
+        string text = questName +" gave you " + questReward + " gold !!!";
+
+        StartCoroutine(TextPlay(text));
+    }
+    IEnumerator TextPlay(string text)
+    {
+        warningDisplayText.text = "";
+
+        foreach (char c in text)
+        {
+            warningDisplayText.text += c;
+            yield return new WaitForSeconds(textSpeed);
+        }
+
+        yield return new WaitForSeconds(2.5f);
+
+        warningDisplay.SetActive(false);
+
+        yield break;
     }
 
     //code that disables that hand
@@ -196,8 +223,12 @@ public class GameManager : MonoBehaviour
     //in here we will check the item's code and play the corresponding sequence
     public void UsingItem(int itemCode, string itemName, int effectQuantity)
     {
+        StopAllCoroutines();
         switch (itemCode)
         {
+            case 0:
+                StartCoroutine(KeyItemUsage());
+                return;
             case 1:
                 StartCoroutine(HealingItemUsage(itemName, effectQuantity));
                 return;
@@ -215,6 +246,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    IEnumerator KeyItemUsage()
+    {
+        string text = "You can't use key items...";
+
+        attackPanel.text = "";
+
+        foreach (char c in text)
+        {
+            attackPanel.text += c;
+            yield return new WaitForSeconds(textSpeed);
+        }
+
+        yield break;
+    }
+
     //the healing item code, we need the name of the item and the effect's quantity
     IEnumerator HealingItemUsage(string itemName, int effectQuantity)
     {
@@ -222,7 +268,15 @@ public class GameManager : MonoBehaviour
         if (playerTurn && fightScene.activeInHierarchy)
         {
             //changing the text on the attack panel
-            attackPanel.text = "Player has used a " + itemName + "!!!";
+            string text = "Player has used a " + itemName + "!!!";
+
+            attackPanel.text = "";
+
+            foreach (char c in text)
+            {
+                attackPanel.text += c;
+                yield return new WaitForSeconds(textSpeed);
+            }
 
             playerTurn = false;
 
@@ -235,13 +289,29 @@ public class GameManager : MonoBehaviour
 
                 playerStats.currentHealth = playerStats.maxHealth;
 
-                attackPanel.text = "Player has healed for " + difference + "!!!";
+                text = "Player has healed for " + difference + "!!!";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
             }
             else
             {
                 playerStats.currentHealth += effectQuantity;
 
-                attackPanel.text = "Player has healed for " + effectQuantity + " !!!";
+                text = "Player has healed for " + effectQuantity + " !!!";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
 
             }
 
@@ -264,7 +334,16 @@ public class GameManager : MonoBehaviour
 
                 warningDisplay.SetActive(true);
 
-                warningDisplayText.text = "You have healed for " + difference + "!!!";
+                warningDisplayText.text = "";
+
+                string text = "You have healed for " + difference + "!!!";
+
+                foreach (char c in text)
+                {
+                    warningDisplayText.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
+
             }
             else
             {
@@ -272,7 +351,15 @@ public class GameManager : MonoBehaviour
 
                 warningDisplay.SetActive(true);
 
-                warningDisplayText.text = "You have healed for " + effectQuantity + " !!!";
+                warningDisplayText.text = "";
+
+                string text = "You have healed for " + effectQuantity + " !!!";
+
+                foreach (char c in text)
+                {
+                    warningDisplayText.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
             }
 
             yield return new WaitForSeconds(3);
@@ -289,7 +376,15 @@ public class GameManager : MonoBehaviour
         if (playerTurn && fightScene.activeInHierarchy)
         {
             //changing the text on the attack panel
-            attackPanel.text = "Player has used a " + itemName + "!!!";
+            string text = "Player has used a " + itemName + "!!!";
+
+            attackPanel.text = "";
+
+            foreach (char c in text)
+            {
+                attackPanel.text += c;
+                yield return new WaitForSeconds(textSpeed);
+            }
 
             playerTurn = false;
 
@@ -301,13 +396,29 @@ public class GameManager : MonoBehaviour
 
                 playerStats.currentMana = playerStats.maxMana;
 
-                attackPanel.text = "Player has recovered blood for " + difference + "!!!";
+                text = "Player has recovered blood for " + difference + "!!!";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
             }
             else
             {
                 playerStats.currentMana += effectQuantity;
 
-                attackPanel.text = "Player has recovered blood for " + effectQuantity +" !!!";
+                text = "Player has recovered blood for " + effectQuantity + " !!!";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
 
             }
 
@@ -323,10 +434,32 @@ public class GameManager : MonoBehaviour
             if (playerStats.currentMana + effectQuantity > playerStats.maxMana)
             {
                 playerStats.currentMana = playerStats.maxMana;
+
+                warningDisplayText.text = "";
+
+                int difference = playerStats.maxMana - playerStats.currentMana;
+
+                string text = "Player has recovered blood for " + difference + "!!!";
+
+                foreach (char c in text)
+                {
+                    warningDisplayText.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
             }
             else
             {
                 playerStats.currentMana += effectQuantity;
+
+                warningDisplayText.text = "";
+
+                string text = "Player has recovered blood for " + effectQuantity + "!!!";
+
+                foreach (char c in text)
+                {
+                    warningDisplayText.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
             }
 
             yield break;
@@ -339,13 +472,29 @@ public class GameManager : MonoBehaviour
         if (playerTurn && fightScene.activeInHierarchy)
         {
             //changing the text on the attack panel
-            attackPanel.text = "Player has used a " + itemName + "!!!";
+            string text = "Player has used a " + itemName + "!!!";
+
+            attackPanel.text = "";
+
+            foreach (char c in text)
+            {
+                attackPanel.text += c;
+                yield return new WaitForSeconds(textSpeed);
+            }
 
             playerTurn = false;
 
             yield return new WaitForSeconds(1.5f);
 
-            attackPanel.text = "You dealt " + effectQuantity + " to the enemy !!!";
+            text = "You dealt " + effectQuantity + " to the enemy !!!";
+
+            attackPanel.text = "";
+
+            foreach (char c in text)
+            {
+                attackPanel.text += c;
+                yield return new WaitForSeconds(textSpeed);
+            }
 
             //we send zero instead of the random multiplier because the item never crits
             SpecialEffects(0, true);
@@ -365,7 +514,15 @@ public class GameManager : MonoBehaviour
             //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
             if (enemy[i] != null)
             {
-                attackPanel.text = "It's the enemy's turn now.";
+                text = "It's the enemy's turn now.";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
 
                 StartCoroutine(EnemyAttack());
 
@@ -374,15 +531,45 @@ public class GameManager : MonoBehaviour
             //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
             else
             {
-                attackPanel.text = "You have defeated the enemy!!";
+                text = "You have defeated the enemy!!";
 
-                yield return new WaitForSeconds(1);
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
+
+                yield return new WaitForSeconds(1.5f);
+
+                playerStats.gold += enemyStats[i].goldDrop;
+
+                text = "You got " + enemyStats[i].goldDrop + " gold!!";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
+
+                yield return new WaitForSeconds(1.5f);
 
                 playerStats.GetXP(enemyStats[i].xpDrop);
 
-                attackPanel.text = "You got " + enemyStats[i].xpDrop + " XP!!";
+                text = "You got " + enemyStats[i].xpDrop + " XP!!";
 
-                yield return new WaitForSeconds(1);
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
+
+                yield return new WaitForSeconds(1.5f);
 
                 ActivateWalkScene();
 
@@ -391,8 +578,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Can't use damaging item outside of combat.");
-
             yield break;
         }
     }
@@ -420,7 +605,15 @@ public class GameManager : MonoBehaviour
                 attack = playerStats.aptitude * randomMultiplier;
 
                 //changing the text on the attack panel
-                attackPanel.text = "Player has used " + specialName + "!!!";
+                string text = "Player has used " + specialName + "!!!";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
 
                 playerTurn = false;
 
@@ -438,7 +631,15 @@ public class GameManager : MonoBehaviour
                     attack *= 2;
 
                     //changing the text on the attack panel
-                    attackPanel.text = specialName + " IS SUPER EFFECTIVE !!!";
+                    text = specialName + " IS SUPER EFFECTIVE !!!";
+
+                    attackPanel.text = "";
+
+                    foreach (char c in text)
+                    {
+                        attackPanel.text += c;
+                        yield return new WaitForSeconds(textSpeed);
+                    }
 
                     yield return new WaitForSeconds(1);
                 }
@@ -448,7 +649,15 @@ public class GameManager : MonoBehaviour
                     attack /= 2;
 
                     //changing the text on the attack panel
-                    attackPanel.text = specialName + " is not very effective.... !!!";
+                    text = specialName + " is not very effective.... !!!";
+
+                    attackPanel.text = "";
+
+                    foreach (char c in text)
+                    {
+                        attackPanel.text += c;
+                        yield return new WaitForSeconds(textSpeed);
+                    }
 
                     yield return new WaitForSeconds(1);
                 }
@@ -457,7 +666,15 @@ public class GameManager : MonoBehaviour
                 InFightChangeStats();
 
                 //how much damage the special did
-                attackPanel.text = specialName + " dealt " + attack + " damage !!!";
+                text = specialName + " dealt " + attack + " damage !!!";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
 
                 //here is where the animation will play
 
@@ -478,7 +695,15 @@ public class GameManager : MonoBehaviour
                 //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
                 if (enemy[i] != null)
                 {
-                    attackPanel.text = "It's the enemy's turn now.";
+                    text = "It's the enemy's turn now.";
+
+                    attackPanel.text = "";
+
+                    foreach (char c in text)
+                    {
+                        attackPanel.text += c;
+                        yield return new WaitForSeconds(textSpeed);
+                    }
 
                     StartCoroutine(EnemyAttack());
 
@@ -487,15 +712,45 @@ public class GameManager : MonoBehaviour
                 //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
                 else
                 {
-                    attackPanel.text = "You have defeated the enemy!!";
+                    text = "You have defeated the enemy!!";
 
-                    yield return new WaitForSeconds(1);
+                    attackPanel.text = "";
+
+                    foreach (char c in text)
+                    {
+                        attackPanel.text += c;
+                        yield return new WaitForSeconds(textSpeed);
+                    }
+
+                    yield return new WaitForSeconds(1.5f);
+
+                    playerStats.gold += enemyStats[i].goldDrop;
+
+                    text = "You got " + enemyStats[i].goldDrop + " gold!!";
+
+                    attackPanel.text = "";
+
+                    foreach (char c in text)
+                    {
+                        attackPanel.text += c;
+                        yield return new WaitForSeconds(textSpeed);
+                    }
+
+                    yield return new WaitForSeconds(1.5f);
 
                     playerStats.GetXP(enemyStats[i].xpDrop);
 
-                    attackPanel.text = "You got " + enemyStats[i].xpDrop + " XP!!";
+                    text = "You got " + enemyStats[i].xpDrop + " XP!!";
 
-                    yield return new WaitForSeconds(1);
+                    attackPanel.text = "";
+
+                    foreach (char c in text)
+                    {
+                        attackPanel.text += c;
+                        yield return new WaitForSeconds(textSpeed);
+                    }
+
+                    yield return new WaitForSeconds(1.5f);
 
                     ActivateWalkScene();
 
@@ -506,8 +761,16 @@ public class GameManager : MonoBehaviour
             {
                 buttonManager.ResumeGame();
 
-                attackPanel.text = "You need more blood for that spell...";
-                
+                string text = "You need more blood for that spell...";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed - 0.02f);
+                }
+
                 yield break;
             }
         }
@@ -535,7 +798,15 @@ public class GameManager : MonoBehaviour
             attack = playerStats.attack * randomMultiplier;
 
             //changing the text on the attack panel
-            attackPanel.text = "Player has attacked for " + attack + " !!!";
+            string text = "Player has attacked for " + attack + " !!!";
+
+            attackPanel.text = "";
+
+            foreach (char c in text)
+            {
+                attackPanel.text += c;
+                yield return new WaitForSeconds(textSpeed);
+            }
 
             //the player's turn is false
             playerTurn = false;
@@ -563,7 +834,15 @@ public class GameManager : MonoBehaviour
             //checking if the enemy is null, if it isnt, its the enemy turn and the enemy will attack
             if (enemy[i] != null)
             {
-                attackPanel.text = "It's the enemy's turn now.";
+                text = "It's the enemy's turn now.";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
 
                 StartCoroutine(EnemyAttack());
 
@@ -572,15 +851,45 @@ public class GameManager : MonoBehaviour
             //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
             else
             {
-                attackPanel.text = "You have defeated the enemy!!";
+                text = "You have defeated the enemy!!";
 
-                yield return new WaitForSeconds(1);
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
+
+                yield return new WaitForSeconds(1.5f);
+
+                playerStats.gold += enemyStats[i].goldDrop;
+
+                text = "You got " + enemyStats[i].goldDrop + " gold!!";
+
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
+
+                yield return new WaitForSeconds(1.5f);
 
                 playerStats.GetXP(enemyStats[i].xpDrop);
 
-                attackPanel.text = "You got " + enemyStats[i].xpDrop + " XP!!";
+                text = "You got " + enemyStats[i].xpDrop + " XP!!";
 
-                yield return new WaitForSeconds(1);
+                attackPanel.text = "";
+
+                foreach (char c in text)
+                {
+                    attackPanel.text += c;
+                    yield return new WaitForSeconds(textSpeed);
+                }
+
+                yield return new WaitForSeconds(1.5f);
 
                 ActivateWalkScene();
 
@@ -609,7 +918,15 @@ public class GameManager : MonoBehaviour
         int attack = enemyStats[i].attack * randomMultiplier;
 
         //showing the player how much damage he did
-        attackPanel.text = "The enemy has attacked for " + attack + " !!!";
+        string text = "The enemy has attacked for " + attack + " !!!";
+
+        attackPanel.text = "";
+
+        foreach (char c in text)
+        {
+            attackPanel.text += c;
+            yield return new WaitForSeconds(textSpeed);
+        }
 
         //damaging the player
         playerStats.Damage(attack);
@@ -627,7 +944,15 @@ public class GameManager : MonoBehaviour
         //its the player turn now after 2 seconds
         playerTurn = true;
 
-        attackPanel.text = "Its your turn now!";
+        text = "Its your turn now!";
+
+        attackPanel.text = "";
+
+        foreach (char c in text)
+        {
+            attackPanel.text += c;
+            yield return new WaitForSeconds(textSpeed);
+        }
 
         yield break;
     }

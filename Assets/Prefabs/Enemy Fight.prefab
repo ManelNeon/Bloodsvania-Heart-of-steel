@@ -105,4 +105,5 @@ MonoBehaviour:
   attack: 10
   aptitude: 15
   xpDrop: 2
-  typing: 2
+  goldDrop: 15
+  typing: 4
