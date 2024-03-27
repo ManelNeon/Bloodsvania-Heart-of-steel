@@ -5,27 +5,29 @@ using System.IO;
 
 public class DataManager : MonoBehaviour
 {
-    PlayerController playerController;
+    public static DataManager Instance; 
 
-    Player playerStats;
+    [SerializeField] PlayerController playerController;
 
-    InventoryManager inventoryManager;
+    [SerializeField] Player playerStats;
 
-    QuestManager questManager;
+    [SerializeField] InventoryManager inventoryManager;
 
-    SpecialManager specialManager;
+    [SerializeField] QuestManager questManager;
+
+    [SerializeField] SpecialManager specialManager;
 
     private void Start()
     {
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        //checking if there's other Instance
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-        playerStats = GameObject.Find("PlayerStatsHolder").GetComponent<Player>();
-
-        inventoryManager = GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>();
-
-        questManager = GameObject.Find("PlayerStatsHolder").GetComponent<QuestManager>();
-
-        specialManager = GameObject.Find("PlayerStatsHolder").GetComponent<SpecialManager>();
+        //if there isnt, this is the Instance
+        Instance = this;
     }
 
     private void Update()
@@ -71,83 +73,71 @@ public class DataManager : MonoBehaviour
 
     public void SavePlayerData()
     {
-        string path = Application.persistentDataPath + "/savePlayerData.json";
+        SaveDataPlayer data = new SaveDataPlayer();
 
-        if (File.Exists(path))
+        data.transformPositionX = playerController.transform.position.x;
+
+        data.transformPositionY = playerController.transform.position.y;
+
+        data.gold = playerStats.gold;
+
+        for (int i = 0; i < specialManager.specialSlots.Length; i++)
         {
-            string json = File.ReadAllText(path);
+            if (specialManager.GettingSpecials(i) != null)
+            {
+                data.specials++;
 
-            SaveDataPlayer data = JsonUtility.FromJson<SaveDataPlayer>(json);
-
-            data.transformPositionX = playerController.transform.position.x;
-
-            json = JsonUtility.ToJson(data);
-
-            File.WriteAllText(Application.persistentDataPath + "/savePlayerData.json", json);
+                data.specialID[i] = specialManager.GettingSpecials(i).specialID;
+            }
         }
-        else
+
+        for (int i = 0; i < inventoryManager.itemSlot.Length; i++)
         {
-            SaveDataPlayer data = new SaveDataPlayer();
-
-            data.transformPositionX = playerController.transform.position.x;
-
-            data.transformPositionY = playerController.transform.position.y;
-
-            data.gold = playerStats.gold;
-
-            for (int i = 0; i < specialManager.specialSlots.Length; i++)
+            if (inventoryManager.GetItemSlot(i) != null)
             {
-                if (specialManager.GettingSpecials(i) != null)
-                {
-                    data.specials++;
+                data.items++;
 
-                    data.specialID[i] = specialManager.GettingSpecials(i).specialID;
-                }
+                data.itemsID[i] = inventoryManager.GetItemSlot(i).itemID;
+
+                data.itemsQuantity[i] = inventoryManager.GetItemSlot(i).quantity;
             }
-
-            for (int i = 0; i < inventoryManager.itemSlot.Length; i++)
-            {
-                if (inventoryManager.GetItemSlot(i) != null)
-                {
-                    data.items++;
-
-                    data.itemsID[i] = inventoryManager.GetItemSlot(i).itemID;
-
-                    data.itemsQuantity[i] = inventoryManager.GetItemSlot(i).quantity;
-                }
-            }
-
-            for (int i = 0; i < questManager.questSlots.Length; i++)
-            {
-                if (questManager.GetQuestSlot(i) != null)
-                {
-                    data.quests++;
-
-                    data.questsID[i] = questManager.GetQuestSlot(i).questID;
-
-                    if (questManager.GetSideQuestBools(data.questsID[i]) != null)
-                    {
-                        data.questAcceptedSecond[i] = questManager.GetSideQuestBools(data.questsID[i]).questAcceptedSecond;
-                    }
-                }
-            }
-
-            for (int i = 0; i < questManager.quests.Length; i++)
-            {
-                if (questManager.GetSideQuestBools(0) != null)
-                {
-                    data.questsID[i] = questManager.GetSideQuestBools(0).questID;
-
-                    data.questCompleted[i] = questManager.GetSideQuestBools(0).questCompleted;
-                }
-            }
-
-            string json = JsonUtility.ToJson(data);
-
-            Debug.Log(json);
-
-            File.WriteAllText(Application.persistentDataPath + "/savePlayerData.json", json);
         }
+
+        for (int i = 0; i < questManager.questSlots.Length; i++)
+        {
+            if (questManager.GetQuestSlot(i) != null)
+            {
+                data.quests++;
+
+                data.questsID[i] = questManager.GetQuestSlot(i).questID;
+
+                if (questManager.GetSideQuestBools(data.questsID[i]) != null)
+                {
+                    data.questAcceptedSecond[i] = questManager.GetSideQuestBools(data.questsID[i]).questAcceptedSecond;
+                }
+            }
+        }
+
+        for (int i = 0; i < questManager.quests.Length; i++)
+        {
+            if (questManager.GetSideQuestBools(0) != null)
+            {
+                data.questsID[i] = questManager.GetSideQuestBools(0).questID;
+
+                data.questCompleted[i] = questManager.GetSideQuestBools(0).questCompleted;
+            }
+        }
+
+        string json = JsonUtility.ToJson(data);
+
+        Debug.Log(json);
+
+        File.WriteAllText(Application.persistentDataPath + "/savePlayerData.json", json);
+    }
+
+    public void LoadData()
+    {
+
     }
 
     public void DeleteData()

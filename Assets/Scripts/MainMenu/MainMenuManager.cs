@@ -5,9 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] GameObject mainMenu;
+
+    [SerializeField] GameObject game;
+
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public void NewGameButton()
     {
-        SceneManager.LoadScene(1);
+        mainMenu.SetActive(false);
+        game.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

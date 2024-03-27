@@ -94,6 +94,11 @@ public class ButtonManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void SaveGamePress()
+    {
+
+    }
+
     public void StatsPausePress()
     {
         specialsDescription.SetActive(false);

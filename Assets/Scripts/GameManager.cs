@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
     //getting the walk scene
     [SerializeField] GameObject walkScene;
 
+    [SerializeField] GameObject junkyardScene;
+
+    [SerializeField] GameObject cityScene;
+
     // ---- In Game Necessities ---- //
 
     //getting the pause menu
@@ -83,7 +87,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool playerTurn;
 
     // Start is called before the first frame update
-    void Start()
+
+    private void OnEnable()
     {
         //checking if there's other Instance
         if (Instance != null)
@@ -91,12 +96,25 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        
+
         //if there isnt, this is the Instance
         Instance = this;
 
         //getting the player stats from the player
         playerStats = player.GetComponent<Player>();
+
+        PlayerController playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+
+        if (playerController.transform.position.x < -39)
+        {
+            junkyardScene.SetActive(true);
+            cityScene.SetActive(true);
+        }
+        else
+        {
+            cityScene.SetActive(false);
+            junkyardScene.SetActive(true);
+        }
     }
 
     void Update()
