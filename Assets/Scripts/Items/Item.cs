@@ -23,6 +23,8 @@ public class Item : MonoBehaviour
 
     public int itemCost;
 
+    public int itemID;
+
     /*
     0 - Key Item
     1 - Healing
@@ -41,7 +43,7 @@ public class Item : MonoBehaviour
     //code to get the item
     void GetItem()
     {
-        GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemName, quantity, itemSprite, itemDescription, itemCode, effectQuantity, itemEffect);
+        GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemID,quantity);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

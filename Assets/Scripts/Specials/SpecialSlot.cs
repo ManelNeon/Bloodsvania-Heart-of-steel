@@ -30,6 +30,8 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
     int specialCost;
 
+    [HideInInspector] public int specialID;
+
     //checking if the slot is full
     [HideInInspector] public bool isFull;
 
@@ -62,7 +64,7 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [SerializeField] TextMeshProUGUI specialDescriptionText;
 
     //code that adds a special, requires the name of the special, it's typing Code, the time it takes to use the special, its image and the description
-    public void AddSpecial(string specialName, int typingCode, float specialTime, Sprite specialImage, string specialDescription, int specialCost)
+    public void AddSpecial(string specialName, int typingCode, float specialTime, Sprite specialImage, string specialDescription, int specialCost, int specialID)
     {
         //assigning the special's data to the spots
         this.specialName = specialName;
@@ -76,6 +78,8 @@ public class SpecialSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         this.specialDescription = specialDescription;
 
         this.specialCost = specialCost;
+
+        this.specialID = specialID;
 
         divider.SetActive(true);
 

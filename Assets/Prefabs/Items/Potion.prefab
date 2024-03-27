@@ -50,6 +50,9 @@ MonoBehaviour:
   itemEffect: Good
   effectQuantity: 25
   itemCost: 10
+  itemID: 1
   itemCode: 1
   itemDescription: A potion that will heal you, and cure you of all diseases except
     AIDS. AIDS is the strongest of enemies
+  warningDisplay: {fileID: 0}
+  warningDisplayText: {fileID: 0}

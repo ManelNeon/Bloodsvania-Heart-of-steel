@@ -14,6 +14,8 @@ public class NPCSideQuest : NPC
 
     [SerializeField] string questGiver;
 
+    public int questID;
+
     [SerializeField] int questReward;
 
     [SerializeField] string questItemName;
@@ -39,9 +41,9 @@ public class NPCSideQuest : NPC
 
     bool questRefused;
 
-    bool questAcceptedSecond;
+    [HideInInspector] public bool questAcceptedSecond;
 
-    bool questCompleted;
+    [HideInInspector] public bool questCompleted;
 
     bool rewardGiven;
 
@@ -324,7 +326,7 @@ public class NPCSideQuest : NPC
         displayText.text = "";
         StartCoroutine(TypeLine());
         GameManager.Instance.DisablingHand();
-        questManager.AddQuest(questName,questGiver,questDescription);
+        questManager.AddQuest(questName,questGiver,questDescription, questID);
         buttons.SetActive(false);
     }
 

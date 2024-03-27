@@ -42,7 +42,7 @@ public class ShopManager : MonoBehaviour
         {
             if (!shopSlots[i].isFull)
             {
-                shopSlots[i].AddItem(items[index].itemName, items[index].itemSprite, items[index].itemDescription, items[index].itemCost, items[index].itemCode, items[index].effectQuantity, items[index].itemEffect, index, this);
+                shopSlots[i].AddItem(items[index].itemName, items[index].itemSprite, items[index].itemDescription, items[index].itemCost, items[index].itemCode, items[index].effectQuantity, items[index].itemEffect, index, items[index].itemID, this);
 
                 index++;
 

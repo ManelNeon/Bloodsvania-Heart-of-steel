@@ -1456,6 +1456,11 @@ MonoBehaviour:
   - {fileID: 317840416}
   - {fileID: 1054051244}
   - {fileID: 1947924349}
+  itemsPrefabs:
+  - {fileID: 8745727700239144287, guid: a9fbffd0bd507274f84923ed3dda3d6e, type: 3}
+  - {fileID: 283256950614038184, guid: af5b8826b15143e438740d4ceefae230, type: 3}
+  - {fileID: 283256950614038184, guid: b5f669b6332852e4d876b181a1621e75, type: 3}
+  - {fileID: 2209430748565807239, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
 --- !u!114 &93033243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1482,6 +1487,8 @@ MonoBehaviour:
   - {fileID: 728455956}
   - {fileID: 39160991}
   - {fileID: 2097594299}
+  specialsPrefabs:
+  - {fileID: 1021035975848423837, guid: 8bff448a33de7ef4580d8d92a222e30c, type: 3}
 --- !u!114 &93033244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1508,6 +1515,8 @@ MonoBehaviour:
   - {fileID: 258227350}
   - {fileID: 145250775}
   - {fileID: 548900289}
+  quests:
+  - {fileID: 1833636366}
 --- !u!1 &95003376
 GameObject:
   m_ObjectHideFlags: 0
@@ -2139,6 +2148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 145250776}
   position: {fileID: 1829513150}
@@ -3593,6 +3603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 233215244}
   position: {fileID: 1162471916}
@@ -3899,6 +3910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 235557672}
   position: {fileID: 864879160}
@@ -4393,6 +4405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 258227351}
   position: {fileID: 64606878}
@@ -8271,6 +8284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 548900290}
   position: {fileID: 1452702444}
@@ -8856,6 +8870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 605042958}
   position: {fileID: 533236812}
@@ -9184,6 +9199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 630164539}
   position: {fileID: 2127082861}
@@ -17334,6 +17350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 909639928}
   position: {fileID: 232131999}
@@ -26939,6 +26956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 1502716980}
   position: {fileID: 1402800409}
@@ -27511,6 +27529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 1550512173}
   position: {fileID: 127635015}
@@ -27838,6 +27857,7 @@ MonoBehaviour:
     beating them. It emanates a feeling of power, like nothing you've seen before,
     your robot soul shakes with every swing
   specialCost: 25
+  specialID: 1
   specialImage: {fileID: 21300000, guid: 50005a2743d3fc84998b8225363742b9, type: 3}
 --- !u!1 &1561319165
 GameObject:
@@ -30069,6 +30089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 1673310863}
   position: {fileID: 948892262}
@@ -32561,6 +32582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 1811783715}
   position: {fileID: 654168921}
@@ -32700,160 +32722,11 @@ RectTransform:
   m_AnchoredPosition: {x: -210.99998, y: 0.20005776}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1833546872
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1833546874}
-  - component: {fileID: 1833546873}
-  - component: {fileID: 1833546875}
-  - component: {fileID: 1833546876}
-  m_Layer: 0
-  m_Name: Vincent's Book
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1833546873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833546872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a613487ccfeecbc4c89ca4c231727850, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemName: Vincent's Book
-  quantity: 1
-  itemSprite: {fileID: 2034373636, guid: a11c07f2eaa00d141b3f4372c6f3b3e7, type: 3}
-  itemEffect: Unknown
-  effectQuantity: 0
-  itemCost: 0
-  itemCode: 0
-  itemDescription: A key item, you can give this to Vincent so that he may continue
-    his proudfull (?) jokes.
-  warningDisplay: {fileID: 1326669688}
-  warningDisplayText: {fileID: 664355868}
---- !u!4 &1833546874
+--- !u!4 &1833546874 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+  m_PrefabInstance: {fileID: 4247616381237455473}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833546872}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.59, y: 0, z: 0}
-  m_LocalScale: {x: 1.7778, y: 1.7778, z: 1.7778}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 754791923}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1833546875
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833546872}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 2034373636, guid: a11c07f2eaa00d141b3f4372c6f3b3e7, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.5, y: 0.5}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!61 &1833546876
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833546872}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.5, y: 0.5}
-    newSize: {x: 0.5, y: 0.5}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5}
-  m_EdgeRadius: 0
 --- !u!114 &1833636366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32894,6 +32767,7 @@ MonoBehaviour:
     his book, for he is the chosen one, the one the Shibukai fear.
   questName: Da Hunt For Da Buk
   questGiver: Vincent
+  questID: 1
   questReward: 200
   questItemName: Vincent's Book
   questManager: {fileID: 93033244}
@@ -32912,6 +32786,8 @@ MonoBehaviour:
   buttons: {fileID: 1446386894}
   acceptButton: {fileID: 1253628260}
   refuseButton: {fileID: 1794790949}
+  questAcceptedSecond: 0
+  questCompleted: 0
 --- !u!1 &1837878028
 GameObject:
   m_ObjectHideFlags: 0
@@ -42913,6 +42789,71 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1001 &4247616381237455473
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 754791923}
+    m_Modifications:
+    - target: {fileID: 2209430748565807239, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: warningDisplay
+      value: 
+      objectReference: {fileID: 1326669688}
+    - target: {fileID: 2209430748565807239, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: warningDisplayText
+      value: 
+      objectReference: {fileID: 664355868}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577142557261637099, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287894958430486267, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
+      propertyPath: m_Name
+      value: Vincent's Book
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3704a9c43f57c2f4cae356851ed8ed85, type: 3}
 --- !u!1 &4267060683046711483
 GameObject:
   m_ObjectHideFlags: 0
@@ -43824,6 +43765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questName: 
+  questID: 0
   isFull: 0
   questNameText: {fileID: 8628157685536093405}
   position: {fileID: 4295748437472041180}

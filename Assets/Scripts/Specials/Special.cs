@@ -8,24 +8,26 @@ public class Special : MonoBehaviour
     public string specialName;
 
     //the typing Code
-    [SerializeField] int typingCode;
+    public int typingCode;
 
     //time needed to play the special's animation
-    [SerializeField] float specialTime;
+    public float specialTime;
 
     //special's Description
-    [TextArea][SerializeField] string specialDescription;
+    [TextArea] public string specialDescription;
 
-    [SerializeField] int specialCost;
+    public int specialCost;
+
+    public int specialID;
 
     //special's image
-    [SerializeField] Sprite specialImage;
+    public Sprite specialImage;
 
     //code to call when we want to learn the new special
     public void LearnSpecial()
     {
         SpecialManager manager = GameObject.Find("PlayerStatsHolder").GetComponent<SpecialManager>();
 
-        manager.AddSpecial(specialName, typingCode, specialTime, specialImage, specialDescription, specialCost);
+        manager.AddSpecial(specialID);
     }
 }

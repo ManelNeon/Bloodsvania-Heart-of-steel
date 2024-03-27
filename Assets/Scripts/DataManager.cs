@@ -56,7 +56,17 @@ public class DataManager : MonoBehaviour
 
         public int items;
 
+        public int[] itemsID = new int[30];
+
+        public int[] itemsQuantity = new int[30];
+
         public int quests;
+
+        public int[] questsID = new int[30];
+
+        public bool[] questCompleted = new bool[30];
+
+        public bool[] questAcceptedSecond = new bool[30];
     }
 
     public void SavePlayerData()
@@ -90,6 +100,45 @@ public class DataManager : MonoBehaviour
                 if (specialManager.GettingSpecials(i) != null)
                 {
                     data.specials++;
+
+                    data.specialID[i] = specialManager.GettingSpecials(i).specialID;
+                }
+            }
+
+            for (int i = 0; i < inventoryManager.itemSlot.Length; i++)
+            {
+                if (inventoryManager.GetItemSlot(i) != null)
+                {
+                    data.items++;
+
+                    data.itemsID[i] = inventoryManager.GetItemSlot(i).itemID;
+
+                    data.itemsQuantity[i] = inventoryManager.GetItemSlot(i).quantity;
+                }
+            }
+
+            for (int i = 0; i < questManager.questSlots.Length; i++)
+            {
+                if (questManager.GetQuestSlot(i) != null)
+                {
+                    data.quests++;
+
+                    data.questsID[i] = questManager.GetQuestSlot(i).questID;
+
+                    if (questManager.GetSideQuestBools(data.questsID[i]) != null)
+                    {
+                        data.questAcceptedSecond[i] = questManager.GetSideQuestBools(data.questsID[i]).questAcceptedSecond;
+                    }
+                }
+            }
+
+            for (int i = 0; i < questManager.quests.Length; i++)
+            {
+                if (questManager.GetSideQuestBools(0) != null)
+                {
+                    data.questsID[i] = questManager.GetSideQuestBools(0).questID;
+
+                    data.questCompleted[i] = questManager.GetSideQuestBools(0).questCompleted;
                 }
             }
 

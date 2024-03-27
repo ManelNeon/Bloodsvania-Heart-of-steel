@@ -15,6 +15,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     [HideInInspector] public int quantity;
 
+    [HideInInspector] public int itemID;
+
     Sprite itemSprite;
 
     string itemDescription;
@@ -62,7 +64,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     [SerializeField] TextMeshProUGUI descriptionEffect;
 
     //adding the item to the slot
-    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode, int effectQuantity, string itemEffect)
+    public void AddItem(string itemName, int quantity, Sprite itemSprite, string itemDescription, int itemCode, int effectQuantity, string itemEffect, int itemID)
     {
         this.itemName = itemName;
 
@@ -77,6 +79,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         this.effectQuantity = effectQuantity;
 
         this.itemEffect = itemEffect;
+
+        this.itemID = itemID;
 
         isFull = true;
 

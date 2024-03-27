@@ -21,6 +21,8 @@ public class ShopSlots : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
 
     int originalItemCost;
 
+    int itemID;
+
     /*
     0 - Key Item
     1 - Healing
@@ -84,7 +86,7 @@ public class ShopSlots : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
         itemImage.sprite = null;
     }
 
-    public void AddItem(string itemName, Sprite itemSprite, string itemDescription, int itemCost, int itemCode, int effectQuantity, string itemEffect, int index, ShopManager shopManager)
+    public void AddItem(string itemName, Sprite itemSprite, string itemDescription, int itemCost, int itemCode, int effectQuantity, string itemEffect, int index, int itemID ,ShopManager shopManager)
     {
         playerStats = GameObject.Find("PlayerStatsHolder").GetComponent<Player>();
 
@@ -107,6 +109,8 @@ public class ShopSlots : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
         this.itemEffect = itemEffect;
 
         this.index = index;
+
+        this.itemID = itemID;
 
         this.shopManager = shopManager;
 
@@ -160,7 +164,7 @@ public class ShopSlots : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     {
         if (playerStats.gold >= itemCost)
         {
-            inventoryManager.AddItem(itemName, quantity, itemSprite, itemDescription, itemCode, effectQuantity, itemEffect);
+            inventoryManager.AddItem(itemID, quantity);
 
             playerStats.gold -= itemCost;
 

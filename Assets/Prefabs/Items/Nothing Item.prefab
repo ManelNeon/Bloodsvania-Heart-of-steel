@@ -50,5 +50,8 @@ MonoBehaviour:
   itemEffect: Good?
   effectQuantity: 0
   itemCost: 0
+  itemID: 3
   itemCode: 1
   itemDescription: Will do nothing, thats the point, debug user
+  warningDisplay: {fileID: 0}
+  warningDisplayText: {fileID: 0}

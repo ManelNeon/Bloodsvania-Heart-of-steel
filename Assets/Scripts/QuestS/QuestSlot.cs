@@ -18,6 +18,8 @@ public class QuestSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
 
     string questDescription;
 
+    [HideInInspector] public int questID;
+
     //checking if the slot is full
     [HideInInspector] public bool isFull;
 
@@ -43,13 +45,15 @@ public class QuestSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     [SerializeField] TextMeshProUGUI questDescriptionText;
 
     //code that adds a special, requires the name of the special, it's typing Code, the time it takes to use the special, its image and the description
-    public void AddQuest(string questName, string questGiver, string questDescription)
+    public void AddQuest(string questName, string questGiver, string questDescription, int questID)
     {
         this.questName = questName;
 
         this.questGiver = questGiver;
 
         this.questDescription = questDescription;
+
+        this.questID = questID;
 
         divider.SetActive(true);
 
