@@ -47,7 +47,9 @@ MonoBehaviour:
   specialName: Beast's Sword
   typingCode: 1
   specialTime: 3
-  specialDescription: The meatie
-  specialCost: 0
+  specialDescription: The accursed beast's gave you their sword as a tribute for
+    beating them. It emanates a feeling of power, like nothing you've seen before,
+    your robot soul shakes with every swing
+  specialCost: 25
   specialID: 1
-  specialImage: {fileID: 0}
+  specialImage: {fileID: 21300000, guid: 50005a2743d3fc84998b8225363742b9, type: 3}

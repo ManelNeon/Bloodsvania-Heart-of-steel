@@ -4,63 +4,83 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//really no use for it to be the child of NPC except to facilitate when we interact with it, almost every variable is repeated and every function is rewritten
 public class NPCSideQuest : NPC
 {
     [Header("Quest Related")]
 
+    //the quest's description
     [SerializeField][TextArea] string questDescription;
 
+    //the quest's name
     [SerializeField] string questName;
 
+    //the quest giver name
     [SerializeField] string questGiver;
 
+    //the quest's id
     public int questID;
 
+    //the quest's reward
     [SerializeField] int questReward;
 
+    //the quest's item name
     [SerializeField] string questItemName;
 
+    //the quest manager
     [SerializeField] QuestManager questManager;
 
     [Header("Dialogue Related")]
+
+    //the dialogues that appear when we accept the quest
     [SerializeField][TextArea] string[] dialoguesAcceptQuest;
 
+    //the dialogues that appear when we refuse the quest
     [SerializeField][TextArea] string[] dialoguesRefuseQuest;
 
+    //the dialogues that appear when we accept the quest and we are doing it
     [SerializeField][TextArea] string[] dialogueWhileQuestAccepted;
 
+    //the dialogues that appear when we complete the quest
     [SerializeField][TextArea] string[] dialoguesCompletedQuest;
 
+    //the buttons object
     [SerializeField] GameObject buttons;
 
+    //the accept button
     [SerializeField] Button acceptButton;
 
+    //the refuse button
     [SerializeField] Button refuseButton;
 
+    //a bool to check if we accepted the quest
     bool questAcceptedFirst;
 
+    //a bool to check if we refused the quest
     bool questRefused;
 
+    //a bool to see if we accepted the quest and play the dialogue while we do the quest
     [HideInInspector] public bool questAcceptedSecond;
 
+    //a bool to see if the quest is done
     [HideInInspector] public bool questCompleted;
 
+    //a bool to check if the reward was given
     bool rewardGiven;
 
-    // Update is called once per frame
+    //the overriden update
     public override void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            questCompleted = true;
-        }
-
+        //we get the left button click
         if (Input.GetMouseButtonDown(0))
         {
+            //if its playing
             if (isPlaying)
             {
+                //we check if the quest isnt accepted or refused
                 if (!questAcceptedFirst && !questAcceptedSecond && !questRefused)
                 {
+                    // we play the normal dialogue
                     if (displayText.text == dialogues[index])
                     {
                         if (index != dialogues.Length - 1)
@@ -74,8 +94,10 @@ public class NPCSideQuest : NPC
                         displayText.text = dialogues[index];
                     }
                 }
+                //we check if the quest was refused
                 else if (questRefused)
                 {
+                    //we get the dialogue for when we refse the quest
                     if (displayText.text == dialoguesRefuseQuest[index])
                     {
                         NextLine();
@@ -86,6 +108,7 @@ public class NPCSideQuest : NPC
                         displayText.text = dialoguesRefuseQuest[index];
                     }
                 }
+                //we check if the quest is completed and play the corresponding dialogue
                 else if (questCompleted)
                 {
                     if (displayText.text == dialoguesCompletedQuest[index])
@@ -98,6 +121,7 @@ public class NPCSideQuest : NPC
                         displayText.text = dialoguesCompletedQuest[index];
                     }
                 }
+                //we check if the quest was accepted and we play the corresponding dialogue
                 else if (questAcceptedFirst)
                 {
                     if (displayText.text == dialoguesAcceptQuest[index])
@@ -110,6 +134,7 @@ public class NPCSideQuest : NPC
                         displayText.text = dialoguesAcceptQuest[index];
                     }
                 }
+                //we check if the quest accepted second is true and we play the dialogue for when we are doing the quest
                 else if (questAcceptedSecond)
                 {
                     if (displayText.text == dialogueWhileQuestAccepted[index])
@@ -126,11 +151,15 @@ public class NPCSideQuest : NPC
         }
     }
 
+    //we override the start dialogue
     public override void StartDialogue()
     {
+
+        //we get the inventory manager
         InventoryManager inventoryManager = GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>();
 
 
+        //if we are doing the quest we look for the item and if it exists we complete the quest (in the inventory manager we delete the item)
         if (questAcceptedSecond)
         {
             if (inventoryManager.LookForItem(questItemName))
@@ -139,14 +168,18 @@ public class NPCSideQuest : NPC
             }
         }
 
+        //when we start the dialogue the quest refused is false so that the player may take the quest whenever he wants
         questRefused = false;
 
+        //we put the hema starting to false ALWAYS
         isHemaStarting = false;
 
         base.StartDialogue();
 
     }
 
+
+    //similar to the case in the update function, we check the bools and play the corresponding dialogue
     public override IEnumerator TypeLine()
     {
         if (!questAcceptedFirst && !questAcceptedSecond && !questRefused)
@@ -199,6 +232,7 @@ public class NPCSideQuest : NPC
         yield break;
     }
 
+    //similar to previous cases
     public override void NextLine()
     {
         if (!questAcceptedFirst && !questAcceptedSecond && !questRefused)
@@ -209,6 +243,7 @@ public class NPCSideQuest : NPC
                 displayText.text = "";
                 if (index == dialogues.Length - 1)
                 {
+                    //when we react the end we set the buttons to active and we add the events to it
                     buttons.SetActive(true);
                     acceptButton.onClick.AddListener(AcceptQuest);
                     refuseButton.onClick.AddListener(RefuseQuest);
@@ -232,6 +267,7 @@ public class NPCSideQuest : NPC
 
                 isPlaying = false;
 
+                //in here we lock the mouse
                 LockMouse();
                 player.GetComponent<PlayerController>().enabled = true;
             }
@@ -251,6 +287,7 @@ public class NPCSideQuest : NPC
 
                 isPlaying = false;
 
+                //in here too
                 LockMouse();
                 player.GetComponent<PlayerController>().enabled = true;
             }
@@ -268,6 +305,7 @@ public class NPCSideQuest : NPC
             {
                 npcTextBox.SetActive(false);
 
+                //in here we put the quest accepted first in false and then we set the quest accepted second to true
                 questAcceptedFirst = false;
 
                 questAcceptedSecond = true;
@@ -301,12 +339,14 @@ public class NPCSideQuest : NPC
 
     }
 
+    //function that locks the mouse
     void LockMouse()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
+    //function that gives the player the reward
     void CompleteQuest()
     {
         if (!rewardGiven)
@@ -318,6 +358,7 @@ public class NPCSideQuest : NPC
     }
 
 
+    //the function we give the buttons, we remove all events on it, we set the index to zero again, we put the display text to zero, we type the line and we add the quest
     void AcceptQuest()
     {
         questAcceptedFirst = true;

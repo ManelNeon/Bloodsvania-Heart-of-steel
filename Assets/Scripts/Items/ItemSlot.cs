@@ -132,6 +132,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                     return;
                 }
 
+                //if the tiems code is 0 (a key item) it will return early, not take the quantity off and display a warning
                 if (itemCode == 0)
                 {
                     GameManager.Instance.UsingItem(itemCode, itemName, effectQuantity);
@@ -167,6 +168,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
     }
 
+    //display when we try to use a key item outside of combat
     IEnumerator WarningDisplayKeyItem()
     {
         isPlaying = true;
@@ -215,6 +217,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
     }
 
+    //display when we try to use a damaging item outside of combat
     IEnumerator WarningDisplayEvent()
     {
         isPlaying = true;

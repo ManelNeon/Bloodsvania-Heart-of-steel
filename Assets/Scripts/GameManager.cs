@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
+//the game manager, responsible for a lot.... i really mean a lot.... 
 public class GameManager : MonoBehaviour
 {
     // ---- Game Instance ---- //
@@ -20,8 +21,10 @@ public class GameManager : MonoBehaviour
     //getting the walk scene
     [SerializeField] GameObject walkScene;
 
+    //getting the junkyard scene
     [SerializeField] GameObject junkyardScene;
 
+    //getting the city scene
     [SerializeField] GameObject cityScene;
 
     // ---- In Game Necessities ---- //
@@ -29,14 +32,22 @@ public class GameManager : MonoBehaviour
     //getting the pause menu
     [SerializeField] GameObject pauseMenu;
 
+    //getting the dialogue menu
     [SerializeField] GameObject dialogueMenu;
 
+    //getting the shop menu
     [SerializeField] GameObject shopMenu;
 
+    //getting the display text in the walk scene
     [SerializeField] TextMeshProUGUI warningDisplayText;
 
+    //and getting the corresponding object
     [SerializeField] GameObject warningDisplay;
 
+    //getting the players animator 
+    [SerializeField] Animator playerAnimator;
+
+    //setting the text's speed for the WHOLE game
     public float textSpeed;
 
     //getting the buttonManager
@@ -60,13 +71,16 @@ public class GameManager : MonoBehaviour
     //the display that shows the player's party
     [SerializeField] TextMeshProUGUI playerNameDisplay;
 
+    //the player's hp display in fight scene
     [SerializeField] TextMeshProUGUI playerHPDisplay;
 
+    //the player's "blood" (mana) display in the fight scene
     [SerializeField] TextMeshProUGUI playerBloodDisplay;
 
     //the display that shows the enemies we're fighting on the fight scene
     [SerializeField] TextMeshProUGUI[] enemiesDisplayName;
 
+    //the array that contains all the slots of the enemies type
     [SerializeField] TextMeshProUGUI[] enemiesDisplayType;
 
     //getting the enemy prefabs
@@ -81,6 +95,7 @@ public class GameManager : MonoBehaviour
     //stats from the enemy instantiated
     Enemy[] enemyStats = new Enemy[4];
 
+    // the enemies count
     int enemyCount;
 
     //cheking if it is or not the player's turn
@@ -88,6 +103,7 @@ public class GameManager : MonoBehaviour
 
     // Start is called before the first frame update
 
+    //code played when we enable the object
     private void OnEnable()
     {
         //checking if there's other Instance
@@ -103,8 +119,10 @@ public class GameManager : MonoBehaviour
         //getting the player stats from the player
         playerStats = player.GetComponent<Player>();
 
+        //we get the players controller
         PlayerController playerController = GameObject.Find("Player").GetComponent<PlayerController>();
 
+        //we check it's position, according to it, we change the active scene (important for when we load data)
         if (playerController.transform.position.x < -39)
         {
             junkyardScene.SetActive(true);
@@ -119,7 +137,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        //if the player clicks escape, activate or deactivate the pause menu
+        //if the player clicks escape, activate or deactivate the pause menu, unless the dialogue or the shop menu are active
         if (Input.GetKeyDown(KeyCode.Escape) && walkScene.activeInHierarchy && !dialogueMenu.activeInHierarchy && !shopMenu.activeInHierarchy)
         {
             if (!pauseMenu.activeInHierarchy)
@@ -129,35 +147,46 @@ public class GameManager : MonoBehaviour
             }
             else if (pauseMenu.activeInHierarchy)
             {
+                //we get the buttons manager resume game function
                 buttonManager.ResumeGame();
             }
         } 
     }
 
+    //function that activates the mouse
     public void UnlockingMouse()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
+    //function that tells the player if the sidequest was completed
     public void SideQuestComplete(string questName, int questReward)
     {
+        //we activate the warning display
         warningDisplay.SetActive(true);
 
+        //we create a text
         string text = questName +" gave you " + questReward + " gold !!!";
 
+        //we send the text to the coroutine that plays it
         StartCoroutine(TextPlay(text));
     }
+
+    //coroutine that plays the text in a slow pretty manner according to the text speed variable (this sample of code appears everywhere so I will explain it here)
     IEnumerator TextPlay(string text)
     {
+        //we set the warning display text to nothing
         warningDisplayText.text = "";
 
+        //for each character in the text we add it to the text and then we wait the text speed 
         foreach (char c in text)
         {
             warningDisplayText.text += c;
             yield return new WaitForSeconds(textSpeed);
         }
 
+        //we wait 2.5 seconds and then we deactivate the warning display and we stop the coroutine
         yield return new WaitForSeconds(2.5f);
 
         warningDisplay.SetActive(false);
@@ -218,6 +247,7 @@ public class GameManager : MonoBehaviour
         playerTurn = true;
     }
 
+    //getting the type for the UI
     string Type(int typeCode)
     {
         switch (typeCode)
@@ -277,6 +307,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //when we use a key item, we get this text
     IEnumerator KeyItemUsage()
     {
         string text = "You can't use key items...";
@@ -707,10 +738,12 @@ public class GameManager : MonoBehaviour
                     yield return new WaitForSeconds(textSpeed);
                 }
 
-                //here is where the animation will play
+                playerAnimator.Play("HemaFightSpecial");
 
                 //waiting time for the animation to play (still no animation, just preparing for when I get them)
                 yield return new WaitForSeconds(animationTime);
+
+                playerAnimator.Play("HemaFightIdle");
 
                 SpecialEffects(randomMultiplier, true);
 
@@ -834,6 +867,7 @@ public class GameManager : MonoBehaviour
             //changing the text on the attack panel
             string text = "Player has attacked for " + attack + " !!!";
 
+            //code for playing the text in a nice manner
             attackPanel.text = "";
 
             foreach (char c in text)
@@ -842,10 +876,14 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(textSpeed);
             }
 
-            //Here is where the animation will play
+            //we play the animation
+            playerAnimator.Play("HemaFightAttack");
 
             //waiting time for the animation to play (still no animation, just preparing for when I get them)
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(2.5f);
+
+            //we go back to the idle animation
+            playerAnimator.Play("HemaFightIdle");
 
             //playing the speciall effects function
             SpecialEffects(randomMultiplier, true);
@@ -951,6 +989,7 @@ public class GameManager : MonoBehaviour
         //showing the player how much damage he did
         string text = "The enemy has attacked for " + attack + " !!!";
 
+        //code for the text to play pretty
         attackPanel.text = "";
 
         foreach (char c in text)

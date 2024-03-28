@@ -13,11 +13,13 @@ public class QuestSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     //the quest's name for the UI
     [HideInInspector] public string questName;
 
-    //the typing Code, for the UI
+    //the quest giver for the UI
     string questGiver;
 
+    //the quests description
     string questDescription;
 
+    //the quest ID
     [HideInInspector] public int questID;
 
     //checking if the slot is full
@@ -31,6 +33,7 @@ public class QuestSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     //position to where the pointer will go
     [SerializeField] Transform position;
 
+    //the divider in the UI
     [SerializeField] GameObject divider;
 
     // ------- QUEST DESCRIPTION ------ //
@@ -44,7 +47,7 @@ public class QuestSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     //object that will contain the description of the quest
     [SerializeField] TextMeshProUGUI questDescriptionText;
 
-    //code that adds a special, requires the name of the special, it's typing Code, the time it takes to use the special, its image and the description
+    //code that adds a quest
     public void AddQuest(string questName, string questGiver, string questDescription, int questID)
     {
         this.questName = questName;
@@ -60,15 +63,14 @@ public class QuestSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
         //it is now a full slot
         isFull = true;
 
-        //assigning the corresponding typing text according to the typing text
-
-        //changing the text to the special's name and it's typing
+        //changing the text to the quest's name
         questNameText.text = questName;
 
         //enabling the text
         questNameText.enabled = true;
     }
 
+    //function that completes the quest, rewards the player with gold, is no longer full, no longer has any text and the divider is disabled
     public void CompleteQuest(int questReward)
     {
         GameObject.Find("PlayerStatsHolder").GetComponent<Player>().gold += questReward;

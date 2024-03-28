@@ -11,15 +11,19 @@ public class ButtonManager : MonoBehaviour
     //getting the player script
     [SerializeField] Player player;
 
+    //getting the player controller, the movement controller
     [SerializeField] PlayerController playerController;
 
     //the pause ui description
     [SerializeField] GameObject pauseUI;
 
+    //similar header for all the corresponding UI's
     [Header("Stats UI Configuration")]
 
+    //we get the whole menu
     [SerializeField] GameObject statsMenu;
 
+    //and the image for the buttons
     [SerializeField] Image statsButton;
 
     [Header("Specials UI Configuration")]
@@ -28,8 +32,10 @@ public class ButtonManager : MonoBehaviour
 
     [SerializeField] Image specialsButton;
 
+    //for the specials and the inventory we also get the description box
     [SerializeField] GameObject specialsDescription;
 
+    //and the back button, this back button should only activate if the player is in the fight scene
     [SerializeField] GameObject backButtonSpecials;
 
     [Header("Inventory UI Configuration")]
@@ -50,38 +56,49 @@ public class ButtonManager : MonoBehaviour
 
     [SerializeField] GameObject questsDescription;
 
+    //the shop UI acts a bit different in the following code, because it can only be activated when the player talks to merchants, therefore there's no need to constantly deactivate it
     [Header("Shop UI Configuration")]
 
     [SerializeField] GameObject shopMenu;
 
     [SerializeField] GameObject shopDescription;
 
+    //this is the color the buttons assume when we click on them
     Color buttonPressedColor = new Color(1, .81f, .19f);
 
+    //in here we resume our game
     public void ResumeGame()
     {
+        //we get the disasbling hand function from the game manager
         GameManager.Instance.DisablingHand();
 
+        //we firstly deactivate the back buttons
         backButtonSpecials.SetActive(false);
         backButtonItems.SetActive(false);
 
+        //then the description boxs
         specialsDescription.SetActive(false);
         itemsDescription.SetActive(false);
         questsDescription.SetActive(false);
         shopDescription.SetActive(false);
 
+        //then the menus
         questsMenu.SetActive(false);
         specialsMenu.SetActive(false);
         inventoryMenu.SetActive(false);
         statsMenu.SetActive(false);
         shopMenu.SetActive(false);
 
+        //then we put the button's colors back to normal
         statsButton.color = Color.white;
         specialsButton.color = Color.white;
         inventoryButton.color = Color.white;
         questsButton.color = Color.white;
 
+        //and finally we deactivate the UI
         pauseUI.SetActive(false);
+
+        //if the player is not on the fight scene, we deactivate the cursor
         if (!GameManager.Instance.playerTurn)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -89,34 +106,42 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
+    //for the main menu press, we only restart the scene
     public void MainMenuPress()
     {
         SceneManager.LoadScene(0);
     }
 
+    
     public void SaveGamePress()
     {
 
     }
 
+    //for when we click stats on the pause menu we
     public void StatsPausePress()
     {
+        //deactivate the description boxs
         specialsDescription.SetActive(false);
         questsDescription.SetActive(false);
         itemsDescription.SetActive(false);
 
+        //we deactivate the menus
         questsMenu.SetActive(false);
         specialsMenu.SetActive(false);
         inventoryMenu.SetActive(false);
 
+        //we set the buttons colors to white
         questsButton.color = Color.white;
         specialsButton.color = Color.white;
         inventoryButton.color = Color.white;
 
+        //and in here we set the buttons color to the color we defined for the buttons and we activate the stat menus
         statsButton.color = buttonPressedColor;
         statsMenu.SetActive(true);
     }
 
+    //for the specials button we do the same as in the stats, this time for the specials
     public void SpecialsPausePress()
     {
         itemsDescription.SetActive(false);
@@ -134,6 +159,7 @@ public class ButtonManager : MonoBehaviour
         specialsMenu.SetActive(true);
     }
 
+    //the inventory the same
     public void InventoryPausePress()
     {
         specialsDescription.SetActive(false);
@@ -151,6 +177,7 @@ public class ButtonManager : MonoBehaviour
         inventoryMenu.SetActive(true);
     }
 
+    //and the quests the same
     public void QuestsPausePress()
     {
         specialsDescription.SetActive(false);
@@ -168,6 +195,7 @@ public class ButtonManager : MonoBehaviour
         questsMenu.SetActive(true);
     }
 
+    //this code is for when we deactivate the specials, clicking on the back button on the player fighting turn
     public void DeactivateSpecials()
     {
         GameManager.Instance.DisablingHand();
@@ -176,6 +204,7 @@ public class ButtonManager : MonoBehaviour
         specialsMenu.SetActive(false);
     }
 
+    //the same code this time for deactivating the inventory
     public void DeactivateInventory()
     {
         GameManager.Instance.DisablingHand();
@@ -184,6 +213,7 @@ public class ButtonManager : MonoBehaviour
         inventoryMenu.SetActive(false);
     }
 
+    //in here we deactivate the shop, only possible with the back button, or when the player tries to buy a item
     public void DeactivateShop()
     {
         GameManager.Instance.DisablingHand();
@@ -192,6 +222,8 @@ public class ButtonManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        //in here we reactivate the players control of the character as we do not intend for him to keep moving when hes in the menus
         playerController.enabled = true;
     }
 

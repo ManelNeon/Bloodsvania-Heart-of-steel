@@ -4,27 +4,34 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+//child of the all mighty NPC class for when we want to give player a special
 public class NPCSpecialGiver : NPC
 {
-    Special special;
+    //getting the specialPrefab
+    [SerializeField] Special special;
 
+    //getting the special manager
     SpecialManager specialManager;
 
+    //getting the warning text display
     [SerializeField] GameObject warningTextDisplay;
 
+    //and getting its text
     [SerializeField] TextMeshProUGUI warningText;
 
+    //bool for if we are playing the text
     bool playingText;
 
     private void Start()
     {
-        special = GetComponent<Special>();
-
+        //getting the special manager
         specialManager = GameObject.Find("PlayerStatsHolder").GetComponent<SpecialManager>();
     }
 
+    //overriden function of the next line
     public override void NextLine()
     {
+        //same here
         if (index < dialogues.Length - 1)
         {
             index++;
@@ -38,18 +45,22 @@ public class NPCSpecialGiver : NPC
 
             isPlaying = false;
 
+            //in here we check if the player has the special, in case he doenst, we learn it
             if (!specialManager.CheckSpecial(special.specialName))
             {
                 special.LearnSpecial();
 
+                //if the text is playing we stop all coroutines
                 if (playingText)
                 {
                     StopAllCoroutines();
                 }
 
+                // we start the type text function
                 StartCoroutine(SpecialLearnedTextPlay());
             }
 
+            //we lock the mouse
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
@@ -57,6 +68,7 @@ public class NPCSpecialGiver : NPC
         }
     }
 
+    //telling the player which special he learned
     IEnumerator SpecialLearnedTextPlay()
     {
         playingText = true;

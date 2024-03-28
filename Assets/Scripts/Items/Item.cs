@@ -46,6 +46,8 @@ public class Item : MonoBehaviour
         GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemID,quantity);
     }
 
+
+    //for items in the wild, we get them by passing through them
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))

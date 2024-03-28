@@ -9,17 +9,22 @@ public class PlayerController : MonoBehaviour
     //variable that controls the speed of the player
     [SerializeField] float moveSpeed;
 
+    //all the sprites direction
     [SerializeField] Sprite[] spritesDirection;
 
+    //the sprite rendered
     SpriteRenderer spriteRenderer;
 
+    //the players rigidbody
     Rigidbody2D playerRb;
 
+    //the players animator
     Animator animator;
 
     //variable that checks if the player is moving
     bool isMoving;
 
+    //the players look direction
     Vector2 lookDirection = new Vector2(1, 0);
 
     //storing input
@@ -27,17 +32,22 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        //getting the players rb
         playerRb = GetComponent<Rigidbody2D>();
 
+        //getting the players animator
         animator = GetComponent<Animator>();
 
+        //getting the sprite renderer
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
+        //if the player isnt moving and he presses F
         if (Input.GetKeyDown(KeyCode.F) && !isMoving)
         {
+            //we raycast in the direction the player is looking (the ray is bigge on the sides so that it reaches the NPC)
             RaycastHit2D hit;
 
             if (lookDirection.x != 0)
@@ -49,6 +59,7 @@ public class PlayerController : MonoBehaviour
                 hit = Physics2D.Raycast(playerRb.position + Vector2.down * 0.2f, lookDirection, .3f, LayerMask.GetMask("NPC"));
             }
 
+            //if it hits a NPC character we start the dialogue
             if (hit.collider != null)
             {
                 NPC character = hit.collider.GetComponent<NPC>();
@@ -60,29 +71,37 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        //if he isnt, we will record the inputs in the input variable
+        //getting the inputs
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
 
+        //function that changes the players direction according to the inputs
         ChangingPlayersDireciton();
 
+        //if the input is zero (no input)
         if (input == Vector2.zero)
         {
+            //we fix the sprite and we are no longer moving
             FixingSprite();
             isMoving = false;
         }
 
+        //if the input is different than zero
         if (input != Vector2.zero)
         {
+            // the animator is enabled and the player is moving
             animator.enabled = true;
             isMoving = true;
         }
     }
 
+    //function that fixes the sprite
     public void FixingSprite()
     {
+        // we disable the animator
         animator.enabled = false;
 
+        //we check the look direction and put the sprites direction to the corresponding one
         if (lookDirection == Vector2.right)
         {
             spriteRenderer.sprite = spritesDirection[2];
@@ -96,13 +115,16 @@ public class PlayerController : MonoBehaviour
         if (lookDirection == Vector2.up)
         {
             spriteRenderer.sprite = spritesDirection[1];
+            return;
         }
         if (lookDirection == Vector2.down)
         {
             spriteRenderer.sprite = spritesDirection[0];
+            return;
         }
     }
 
+    //on the fixed update we start the movement
     void FixedUpdate()
     {
         //start movement function
@@ -120,11 +142,15 @@ public class PlayerController : MonoBehaviour
             input.y = 0;
         }
 
+        //if the y input is differnt than zero we put the x input to zero
         if (input.y != 0)
         {
             input.x = 0;
         }
 
+        //these two checks make it so that the player cannot move diagonally
+
+        //if the input is different than zero we move the player
         if (input != Vector2.zero)
         {
             Vector2 position = playerRb.position;
@@ -134,9 +160,10 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-
+    //function that changes the players direction
     void ChangingPlayersDireciton()
     {
+        //according to the input, the look direction changes, the sprite too, and the animator's float is changed too
         if (input.x > 0)
         {
             lookDirection = Vector2.right;

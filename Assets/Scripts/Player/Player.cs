@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+//child of the stats class
 public class Player : Stats
 {
     //skillPoints
@@ -14,19 +15,25 @@ public class Player : Stats
     //player's xp
     [HideInInspector] public int xp;
 
+    //player's sprite
     public Sprite playerSprite;
 
+    //player's gold
     [HideInInspector] public int gold;
 
     //how much xp the player needs to level up
     [HideInInspector] public int xpForLevel;
 
+    //checking if the player is dead
     [HideInInspector] public bool isDead;
 
+    //getting the game over display
     [SerializeField] GameObject gameOverDisplay;
 
+    //getting the game over text
     [SerializeField] TextMeshProUGUI gameOverText;
 
+    //overriden start function
     protected override void Start()
     {
         //getting the start from father class and going with it
@@ -37,14 +44,6 @@ public class Player : Stats
 
         //calculating the xp needed for the new level
         NewLevelXP();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            LevelUp();
-        }
     }
 
     //getting xp, it's public because will be used outside this code probably
@@ -136,31 +135,42 @@ public class Player : Stats
             currentHealth = 0;
 
             GameManager.Instance.playerTurn = false;
+            
+            //stopping all coroutines in the game manager so the game stops playing
+            GameManager.Instance.StopAllCoroutines();
 
+            //game over sequence
             StartCoroutine(GameOverSequence());
         }
     }
 
+    //the game over sequence
     IEnumerator GameOverSequence()
     {
+        //THE PLAYER IS DEAD
         isDead = true;
 
         //put player death animation here
 
         yield return new WaitForSeconds(3); //animation time
 
+        //the game over display is activated
         gameOverDisplay.SetActive(true);
 
+        //the text is nothing now
         gameOverText.text = "";
 
+        //the text that will appear when we die
         string text = "You have passed away, sayonara madafaka you are dead as fuk.";
 
+        //the text display 
         foreach (char c in text)
         {
             gameOverText.text += c;
             yield return new WaitForSeconds(GameManager.Instance.textSpeed);
         }
 
+        //stopping the coroutine
         yield break;
     }
 }
