@@ -8,10 +8,12 @@ public class NPCMerchant : NPC
     //in here we only get the shop manager, which every Merchant NPC has one
     ShopManager shopManager;
 
-    private void Start()
+    public override void Start()
     {
         //we get it
         shopManager = GetComponent<ShopManager>();
+
+        base.Start();
     }
 
     //we override the next line funtion

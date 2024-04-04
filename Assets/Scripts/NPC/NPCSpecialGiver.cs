@@ -22,10 +22,12 @@ public class NPCSpecialGiver : NPC
     //bool for if we are playing the text
     bool playingText;
 
-    private void Start()
+    public override void Start()
     {
         //getting the special manager
         specialManager = GameObject.Find("PlayerStatsHolder").GetComponent<SpecialManager>();
+
+        base.Start();
     }
 
     //overriden function of the next line

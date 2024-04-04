@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     // ---- Game Scenes ---- //
 
+    [Header("Scens In Game")]
     //getting the fight scene
     [SerializeField] GameObject fightScene;
 
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     // ---- In Game Necessities ---- //
 
+    [Header("Menus")]
     //getting the pause menu
     [SerializeField] GameObject pauseMenu;
 
@@ -44,27 +46,6 @@ public class GameManager : MonoBehaviour
     //and getting the corresponding object
     [SerializeField] GameObject warningDisplay;
 
-    //getting the players animator 
-    [SerializeField] Animator playerAnimator;
-
-    //setting the text's speed for the WHOLE game
-    public float textSpeed;
-
-    //getting the buttonManager
-    [SerializeField] ButtonManager buttonManager;
-
-    //getting the player game object
-    [SerializeField] GameObject player;
-
-    //getting the player Stats
-    Player playerStats;
-
-    //getting the crit special effect
-    [SerializeField] ParticleSystem critEffect;
-
-    //getting the damage special effect
-    [SerializeField] ParticleSystem damageEffect;
-
     //getting the panel where we inform the player what's happening on screen
     [SerializeField] TextMeshProUGUI attackPanel;
 
@@ -77,12 +58,37 @@ public class GameManager : MonoBehaviour
     //the player's "blood" (mana) display in the fight scene
     [SerializeField] TextMeshProUGUI playerBloodDisplay;
 
+    //getting the buttonManager
+    [SerializeField] ButtonManager buttonManager;
+
     //the display that shows the enemies we're fighting on the fight scene
     [SerializeField] TextMeshProUGUI[] enemiesDisplayName;
 
     //the array that contains all the slots of the enemies type
     [SerializeField] TextMeshProUGUI[] enemiesDisplayType;
 
+    [Header("Player Content")]
+    //getting the players animator 
+    [SerializeField] Animator playerAnimator;
+
+    //getting the player game object
+    [SerializeField] GameObject player;
+
+    //getting the player Stats
+    Player playerStats;
+
+    [Header("Text Speed")]
+    //setting the text's speed for the WHOLE game
+    public float textSpeed;
+
+    [Header("In Fight Effects")]
+    //getting the crit special effect
+    [SerializeField] ParticleSystem critEffect;
+
+    //getting the damage special effect
+    [SerializeField] ParticleSystem damageEffect;
+
+    [Header("Enemy Content")]
     //getting the enemy prefabs
     [SerializeField] GameObject[] enemyPrefabs;
 
@@ -101,7 +107,15 @@ public class GameManager : MonoBehaviour
     //cheking if it is or not the player's turn
     [HideInInspector] public bool playerTurn;
 
-    // Start is called before the first frame update
+
+    [Header("Audio Content")]
+    [SerializeField] AudioClip attackClip;
+
+    [SerializeField] AudioClip specialClip;
+
+    [SerializeField] AudioClip deathClip;
+
+    AudioSource audioSource;
 
     //code played when we enable the object
     private void OnEnable()
@@ -121,6 +135,8 @@ public class GameManager : MonoBehaviour
 
         //we get the players controller
         PlayerController playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+
+        audioSource = GetComponent<AudioSource>();
 
         //we check it's position, according to it, we change the active scene (important for when we load data)
         if (playerController.transform.position.x < -39)
@@ -558,6 +574,8 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(textSpeed);
             }
 
+            audioSource.PlayOneShot(attackClip);
+
             //we send zero instead of the random multiplier because the item never crits
             SpecialEffects(0, true);
 
@@ -593,6 +611,8 @@ public class GameManager : MonoBehaviour
             //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
             else
             {
+                audioSource.PlayOneShot(deathClip);
+
                 text = "You have defeated the enemy!!";
 
                 attackPanel.text = "";
@@ -745,6 +765,8 @@ public class GameManager : MonoBehaviour
 
                 playerAnimator.Play("HemaFightIdle");
 
+                audioSource.PlayOneShot(specialClip);
+
                 SpecialEffects(randomMultiplier, true);
 
                 //waiting two seconds for the damage to apply for good measure
@@ -776,6 +798,8 @@ public class GameManager : MonoBehaviour
                 //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
                 else
                 {
+                    audioSource.PlayOneShot(deathClip);
+
                     text = "You have defeated the enemy!!";
 
                     attackPanel.text = "";
@@ -885,6 +909,8 @@ public class GameManager : MonoBehaviour
             //we go back to the idle animation
             playerAnimator.Play("HemaFightIdle");
 
+            audioSource.PlayOneShot(attackClip);
+
             //playing the speciall effects function
             SpecialEffects(randomMultiplier, true);
 
@@ -920,6 +946,8 @@ public class GameManager : MonoBehaviour
             //if the enemy is null, the player will get xp from the enemystats, and then activate the walk scene and breaking the coroutine
             else
             {
+                audioSource.PlayOneShot(deathClip);
+
                 text = "You have defeated the enemy!!";
 
                 attackPanel.text = "";
@@ -1003,6 +1031,8 @@ public class GameManager : MonoBehaviour
 
         //waiting 2 seconds for the animation
         yield return new WaitForSeconds(2);
+
+        audioSource.PlayOneShot(attackClip);
 
         //playing the special effects
         SpecialEffects(randomMultiplier, false);

@@ -31,11 +31,20 @@ public class NPC : MonoBehaviour
     //and finally we get the player
     public GameObject player;
 
+    public AudioClip textTypingSound;
+
+    [HideInInspector] public AudioSource audioSource;
+
     //a hidden index to run through dialogues
     [HideInInspector] public int index;
 
     //a bool to check if the dialogue is playing
     [HideInInspector]public bool isPlaying;
+
+    public virtual void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public virtual void Update() 
     {
@@ -54,6 +63,7 @@ public class NPC : MonoBehaviour
                 //if it isnt
                 else
                 {
+                    audioSource.Stop();
                     //we stop all coroutines (the writing of the text)
                     StopAllCoroutines();
                     //and set the dialogue to be the same (one more click on the screen and the next line will play
@@ -115,8 +125,11 @@ public class NPC : MonoBehaviour
         foreach (char c in dialogues[index].ToCharArray())
         {
             displayText.text += c;
+            audioSource.Stop();
+            audioSource.PlayOneShot(textTypingSound);
             yield return new WaitForSeconds(GameManager.Instance.textSpeed);
         }
+        audioSource.Stop();
         yield break;
     }
 

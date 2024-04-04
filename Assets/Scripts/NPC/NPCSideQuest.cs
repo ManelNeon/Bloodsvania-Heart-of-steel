@@ -90,6 +90,7 @@ public class NPCSideQuest : NPC
                     }
                     else
                     {
+                        audioSource.Stop();
                         StopAllCoroutines();
                         displayText.text = dialogues[index];
                     }
@@ -104,6 +105,7 @@ public class NPCSideQuest : NPC
                     }
                     else
                     {
+                        audioSource.Stop();
                         StopAllCoroutines();
                         displayText.text = dialoguesRefuseQuest[index];
                     }
@@ -117,6 +119,7 @@ public class NPCSideQuest : NPC
                     }
                     else
                     {
+                        audioSource.Stop();
                         StopAllCoroutines();
                         displayText.text = dialoguesCompletedQuest[index];
                     }
@@ -130,6 +133,7 @@ public class NPCSideQuest : NPC
                     }
                     else
                     {
+                        audioSource.Stop();
                         StopAllCoroutines();
                         displayText.text = dialoguesAcceptQuest[index];
                     }
@@ -143,6 +147,7 @@ public class NPCSideQuest : NPC
                     }
                     else
                     {
+                        audioSource.Stop();
                         StopAllCoroutines();
                         displayText.text = dialogueWhileQuestAccepted[index];
                     }
@@ -187,6 +192,8 @@ public class NPCSideQuest : NPC
             foreach (char c in dialogues[index].ToCharArray())
             {
                 displayText.text += c;
+                audioSource.Stop();
+                audioSource.PlayOneShot(textTypingSound);
                 yield return new WaitForSeconds(GameManager.Instance.textSpeed);
             }
             if (buttons.activeInHierarchy)
@@ -199,6 +206,8 @@ public class NPCSideQuest : NPC
             foreach (char c in dialoguesRefuseQuest[index].ToCharArray())
             {
                 displayText.text += c;
+                audioSource.Stop();
+                audioSource.PlayOneShot(textTypingSound);
                 yield return new WaitForSeconds(GameManager.Instance.textSpeed);
             }
         }
@@ -209,6 +218,8 @@ public class NPCSideQuest : NPC
             foreach (char c in dialoguesCompletedQuest[index].ToCharArray())
             {
                 displayText.text += c;
+                audioSource.Stop();
+                audioSource.PlayOneShot(textTypingSound);
                 yield return new WaitForSeconds(GameManager.Instance.textSpeed);
             }
         }
@@ -217,6 +228,8 @@ public class NPCSideQuest : NPC
             foreach (char c in dialoguesAcceptQuest[index].ToCharArray())
             {
                 displayText.text += c;
+                audioSource.Stop();
+                audioSource.PlayOneShot(textTypingSound);
                 yield return new WaitForSeconds(GameManager.Instance.textSpeed);
             }
         }
@@ -225,9 +238,13 @@ public class NPCSideQuest : NPC
             foreach (char c in dialogueWhileQuestAccepted[index].ToCharArray())
             {
                 displayText.text += c;
+                audioSource.Stop();
+                audioSource.PlayOneShot(textTypingSound);
                 yield return new WaitForSeconds(GameManager.Instance.textSpeed);
             }
         }
+
+        audioSource.Stop();
 
         yield break;
     }
