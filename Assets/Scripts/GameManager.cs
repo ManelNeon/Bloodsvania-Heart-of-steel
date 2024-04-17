@@ -28,6 +28,12 @@ public class GameManager : MonoBehaviour
     //getting the city scene
     [SerializeField] GameObject cityScene;
 
+    [SerializeField] GameObject tutorialBlockers;
+
+    [SerializeField] GameObject tutorialNotice;
+
+    [HideInInspector] public bool isTutorial;
+
     // ---- In Game Necessities ---- //
 
     [Header("Menus")]
@@ -73,6 +79,8 @@ public class GameManager : MonoBehaviour
 
     //getting the player game object
     [SerializeField] GameObject player;
+
+    [SerializeField] PlayerController playerController;
 
     //getting the player Stats
     Player playerStats;
@@ -133,28 +141,32 @@ public class GameManager : MonoBehaviour
         //getting the player stats from the player
         playerStats = player.GetComponent<Player>();
 
-        //we get the players controller
-        PlayerController playerController = GameObject.Find("Player").GetComponent<PlayerController>();
-
         audioSource = GetComponent<AudioSource>();
 
+        if (isTutorial)
+        {
+            tutorialNotice.SetActive(true);
+        }
+
+        walkScene.SetActive(true);
+
         //we check it's position, according to it, we change the active scene (important for when we load data)
-        if (playerController.transform.position.x < -39)
+        if (playerController.transform.position.x > -71)
         {
             junkyardScene.SetActive(true);
-            cityScene.SetActive(true);
+            cityScene.SetActive(false);
         }
         else
         {
-            cityScene.SetActive(false);
-            junkyardScene.SetActive(true);
+            cityScene.SetActive(true);
+            junkyardScene.SetActive(false);
         }
     }
 
     void Update()
     {
         //if the player clicks escape, activate or deactivate the pause menu, unless the dialogue or the shop menu are active
-        if (Input.GetKeyDown(KeyCode.Escape) && walkScene.activeInHierarchy && !dialogueMenu.activeInHierarchy && !shopMenu.activeInHierarchy)
+        if (Input.GetKeyDown(KeyCode.Escape) && walkScene.activeInHierarchy && !dialogueMenu.activeInHierarchy && !shopMenu.activeInHierarchy && !tutorialNotice.activeInHierarchy)
         {
             if (!pauseMenu.activeInHierarchy)
             {
@@ -167,6 +179,11 @@ public class GameManager : MonoBehaviour
                 buttonManager.ResumeGame();
             }
         } 
+    }
+
+    public void DeactivateTutorial()
+    {
+        tutorialBlockers.SetActive(false);
     }
 
     //function that activates the mouse

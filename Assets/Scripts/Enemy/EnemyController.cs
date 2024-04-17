@@ -108,13 +108,13 @@ public class EnemyController : MonoBehaviour
         //making the difference between the x and the y, so that the enemy doenst move diagonally, prioritizing the x axis
 
         //checks if the direction (the movement) is not between 0.01 or -0.01, if it isnt, it will move
-        if (!(direction.x < 0.01 && direction.x > -0.01))
+        if (!(direction.x < 0.1 && direction.x > -0.1))
         {
             Vector2 goPos = new Vector2(direction.x, 0);
             goPos.Normalize(); // we normalize it again because we dont want the enemy to slow down when close to the player
             rb.MovePosition((Vector2)transform.position + (goPos * speed * Time.deltaTime));
         }
-        else if (!(direction.y < 0.01 && direction.y > -0.01))
+        else if (!(direction.y < 0.1 && direction.y > -0.1))
         {
             Vector2 goPos = new Vector2(0, direction.y);
             goPos.Normalize();

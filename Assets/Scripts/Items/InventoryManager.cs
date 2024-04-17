@@ -59,7 +59,14 @@ public class InventoryManager : MonoBehaviour
         {
             if (itemSlot[i].itemName == itemName)
             {
-                itemSlot[i].EraseItem();
+                if (itemSlot[i].quantity - 1 == 0)
+                {
+                    itemSlot[i].EraseItem();
+                }
+                else
+                {
+                    itemSlot[i].quantity -= 1;
+                }
                 return true;
             }
         }

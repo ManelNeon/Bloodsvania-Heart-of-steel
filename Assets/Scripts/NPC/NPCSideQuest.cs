@@ -10,13 +10,13 @@ public class NPCSideQuest : NPC
     [Header("Quest Related")]
 
     //the quest's description
-    [SerializeField][TextArea] string questDescription;
+    [TextArea] public string questDescription;
 
     //the quest's name
-    [SerializeField] string questName;
+    public string questName;
 
     //the quest giver name
-    [SerializeField] string questGiver;
+    public string questGiver;
 
     //the quest's id
     public int questID;
@@ -25,7 +25,7 @@ public class NPCSideQuest : NPC
     [SerializeField] int questReward;
 
     //the quest's item name
-    [SerializeField] string questItemName;
+    public string questItemName;
 
     //the quest manager
     [SerializeField] QuestManager questManager;
@@ -66,8 +66,8 @@ public class NPCSideQuest : NPC
     [HideInInspector] public bool questCompleted;
 
     //a bool to check if the reward was given
-    bool rewardGiven;
-
+    [HideInInspector] public bool rewardGiven;
+    
     //the overriden update
     public override void Update()
     {
@@ -384,7 +384,7 @@ public class NPCSideQuest : NPC
         displayText.text = "";
         StartCoroutine(TypeLine());
         GameManager.Instance.DisablingHand();
-        questManager.AddQuest(questName,questGiver,questDescription, questID);
+        questManager.AddQuest(questID);
         buttons.SetActive(false);
     }
 

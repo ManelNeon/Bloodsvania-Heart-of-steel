@@ -62,7 +62,7 @@ public class SpawnManager : MonoBehaviour
     void EnemySpawn()
     {
         //we check if it's playing
-        if (isPlaying)
+        if (isPlaying && gameObject.activeInHierarchy && !GameManager.Instance.isTutorial)
         {
             //if the index is bigger than the enemis length we set it back to zero
             if (index >= enemy.Length)
@@ -90,6 +90,8 @@ public class SpawnManager : MonoBehaviour
 
             //we instantiate that enemy in the according position and store it in the index
             enemy[index] = Instantiate(enemyPrefabs[randomNumberEnemy], enemySpawnPositions[randomNumberPosition].position, enemyPrefabs[randomNumberEnemy].transform.rotation);
+
+            enemy[index].gameObject.transform.parent = transform;
 
             //we get a diff value that is the distance between the player and the enemy
             float diff = playerPosition.position.y - enemySpawnPositions[randomNumberPosition].position.y;

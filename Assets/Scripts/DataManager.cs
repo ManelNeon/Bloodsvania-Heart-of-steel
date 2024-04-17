@@ -24,6 +24,8 @@ public class DataManager : MonoBehaviour
     //in the inspector we get the specials manager so we can get the specials he has
     [SerializeField] SpecialManager specialManager;
 
+    [SerializeField] GameManager gameManager;
+
     //in the start function we simply identify the instance
     private void Start()
     {
@@ -41,14 +43,25 @@ public class DataManager : MonoBehaviour
     //debug only, testing
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.J))
         {
             SavePlayerData();
         }
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.L))
         {
-            DeleteData();
+            LoadData();
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            string path = Application.persistentDataPath + "/savePlayerData.json";
+
+            if (File.Exists(path))
+            {
+                Debug.Log("2");
+                File.Delete(path);
+            }
         }
     }
 
@@ -64,6 +77,18 @@ public class DataManager : MonoBehaviour
 
         //we save how much gold he has
         public int gold;
+
+        public int level;
+
+        public int healthStat;
+
+        public int manaStat;
+
+        public int attackStat;
+
+        public int apptitudeStat;
+
+        public bool isTutorial;
 
         //we save how many specials he has
         public int specials;
@@ -88,9 +113,6 @@ public class DataManager : MonoBehaviour
 
         //we get a bool corresponding to each NPC that gives a sidequest, checking if they have their quest completed
         public bool[] questCompleted = new bool[30];
-
-        //we get a bool corresponding to each NPC that gives a sidequest, checking if the quest has been accepted
-        public bool[] questAcceptedSecond = new bool[30];
     }
 
     //in here we save the data
@@ -106,6 +128,18 @@ public class DataManager : MonoBehaviour
 
         //we get the player's gold
         data.gold = playerStats.gold;
+
+        data.level = playerStats.level;
+
+        data.healthStat = playerStats.maxHealth;
+
+        data.manaStat = playerStats.maxMana;
+
+        data.attackStat = playerStats.attack;
+
+        data.apptitudeStat = playerStats.aptitude;
+
+        data.isTutorial = gameManager.isTutorial;
 
         //we check the special manager's special slots, and see if they're full, if they are we store their special ID
         for (int i = 0; i < specialManager.specialSlots.Length; i++)
@@ -139,12 +173,6 @@ public class DataManager : MonoBehaviour
                 data.quests++;
 
                 data.questsID[i] = questManager.GetQuestSlot(i).questID;
-
-                //but here we go get the corresponding NPC's data, and store the corresponding bool for his quest
-                if (questManager.GetSideQuestBools(data.questsID[i]) != null)
-                {
-                    data.questAcceptedSecond[i] = questManager.GetSideQuestBools(data.questsID[i]).questAcceptedSecond;
-                }
             }
         }
 
@@ -164,25 +192,81 @@ public class DataManager : MonoBehaviour
 
         Debug.Log(json);
 
-        //and write the json on a json File
-        File.WriteAllText(Application.persistentDataPath + "/savePlayerData.json", json);
-    }
-
-    //in here we will load the data
-    public void LoadData()
-    {
-
-    }
-
-    //in here we check if there is a data file and we delete it
-    public void DeleteData()
-    {
         string path = Application.persistentDataPath + "/savePlayerData.json";
 
         if (File.Exists(path))
         {
             File.Delete(path);
-            Debug.Log("Deleted");
+        }
+
+        //and write the json on a json File
+        File.WriteAllText(path, json);
+    }
+
+    //in here we will load the data
+    public void LoadData()
+    {
+        string path = Application.persistentDataPath + "/savePlayerData.json";
+
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+
+            SaveDataPlayer data = JsonUtility.FromJson<SaveDataPlayer>(json);
+
+            playerController.transform.position = new Vector3(data.transformPositionX, data.transformPositionY, 0);
+
+            playerStats.gold = data.gold;
+
+            playerStats.maxHealth = data.healthStat;
+
+            playerStats.maxMana = data.manaStat;
+
+            playerStats.attack = data.attackStat;
+
+            playerStats.aptitude = data.apptitudeStat;
+
+            gameManager.isTutorial = data.isTutorial;
+
+            if (data.specials != 0)
+            {
+                for (int i = 0; i < data.specials; i++)
+                {
+                    specialManager.AddSpecial(data.specialID[i]);
+                }
+            }
+
+            if (data.items != 0)
+            {
+                for (int i = 0; i < data.items; i++)
+                {
+                    inventoryManager.AddItem(data.itemsID[i], data.itemsQuantity[i]);
+                }
+            }
+            
+            if (data.quests != 0)
+            {
+                for (int i = 0; i < data.quests; i++)
+                {
+                    questManager.AddQuest(data.questsID[i]);
+
+                    questManager.GetSideQuestBools(data.questsID[i]).questAcceptedSecond = true;
+                }
+            }
+
+            for (int i = 0; i < data.questCompleted.Length; i++)
+            {
+                if (data.questCompleted[i])
+                {
+                    questManager.CompleteQuestData(data.questsID[i]);
+                }
+            }
+
+            json = JsonUtility.ToJson(data);
+
+            Debug.Log(json);
+
+            gameManager.gameObject.SetActive(true);
         }
     }
 }

@@ -46,6 +46,19 @@ public class Item : MonoBehaviour
         GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>().AddItem(itemID,quantity);
     }
 
+    private void OnEnable()
+    {
+        if (itemCode == 0)
+        {
+            QuestManager questManager = GameObject.Find("PlayerStatsHolder").GetComponent<QuestManager>();
+
+            if (questManager.CheckingIfQuestComplete(gameObject.name))
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
 
     //for items in the wild, we get them by passing through them
     private void OnTriggerEnter2D(Collider2D collision)

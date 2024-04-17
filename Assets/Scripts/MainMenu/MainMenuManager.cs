@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 //code that manages the main menu
 public class MainMenuManager : MonoBehaviour
@@ -11,6 +12,8 @@ public class MainMenuManager : MonoBehaviour
 
     //getting the game object
     [SerializeField] GameObject game;
+
+    [SerializeField] GameManager gameManager;
 
     //when starting the game, let the player control the mouse
     private void Start()
@@ -23,21 +26,24 @@ public class MainMenuManager : MonoBehaviour
     public void NewGameButton()
     {
         mainMenu.SetActive(false);
+        gameManager.isTutorial = true;
         game.SetActive(true);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Time.timeScale = 0;
     }
 
     //when you click Load Game, we will get the data manager and load the game, we do the same as the new Game Button, with the difference that we load the game first
     public void LoadGameButton()
     {
-        //load the game data
+        string path = Application.persistentDataPath + "/savePlayerData.json";
 
-        //activate the fight scene
+        if (File.Exists(path))
+        {
+            DataManager.Instance.LoadData();
 
-        //deactivate the game scene
+            mainMenu.SetActive(false);
 
-        //deactivate the mouse
+            game.SetActive(true);
+        }
     }
 
     //we press the exit button and the application quits

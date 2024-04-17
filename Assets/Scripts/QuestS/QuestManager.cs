@@ -12,8 +12,30 @@ public class QuestManager : MonoBehaviour
     public NPCSideQuest[] quests;
 
     //adding a special, same requirements as previously, yet this time we do a for loop to see a special slot thats empty and adding the information in, if its empty, debug a specials full
-    public void AddQuest(string questName, string questGiver, string questDescription, int questID)
+    public void AddQuest(int questID)
     {
+        string questName = "";
+
+        string questGiver = "";
+
+        string questDescription = "";
+
+        for (int i = 0; i < quests.Length; i++)
+        {
+            if (quests[i].questID == questID)
+            {
+                questName = quests[i].questName;
+                questGiver = quests[i].questGiver;
+                questDescription = quests[i].questDescription;
+            }
+        }
+
+        if (questName == "")
+        {
+            Debug.Log("Is A bug");
+            return;
+        }
+
         for (int i = 0; i < questSlots.Length; i++)
         {
             if (!questSlots[i].isFull)
@@ -22,7 +44,6 @@ public class QuestManager : MonoBehaviour
                 return;
             }
         }
-        Debug.Log("Quests Full");
     }
 
     //completing the side quest, getting a reward and starting the side quest complete function in the game manager
@@ -39,6 +60,32 @@ public class QuestManager : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void CompleteQuestData(int questID)
+    {
+        for (int i = 0; i < quests.Length; i++)
+        {
+            if (quests[i].questID == questID)
+            {
+                quests[i].questCompleted = true;
+
+                quests[i].rewardGiven = true;
+            }
+        }
+    }
+
+    public bool CheckingIfQuestComplete(string questItemName)
+    {
+        for (int i = 0; i < quests.Length; i++)
+        {
+            if (quests[i].questItemName == questItemName)
+            {
+                return quests[i].questCompleted;
+            }
+        }
+
+        return false;
     }
 
     //getting the quest slot in the data manager

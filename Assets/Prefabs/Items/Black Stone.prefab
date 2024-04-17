@@ -52,6 +52,7 @@ MonoBehaviour:
   itemCost: 150
   itemID: 2
   itemCode: 3
-  itemDescription: The blackest of stones, look upon it and see Africa.
+  itemDescription: Black Stone, a item used that you throw at someon that's really
+    bodering you.
   warningDisplay: {fileID: 0}
   warningDisplayText: {fileID: 0}

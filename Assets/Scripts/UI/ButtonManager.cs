@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.IO;
 
 //Script that contains all of the button functionality, will get big very fast
 public class ButtonManager : MonoBehaviour
@@ -16,6 +17,8 @@ public class ButtonManager : MonoBehaviour
 
     //the pause ui description
     [SerializeField] GameObject pauseUI;
+
+    [SerializeField] GameObject tutorialUI;
 
     //similar header for all the corresponding UI's
     [Header("Stats UI Configuration")]
@@ -62,6 +65,10 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] GameObject shopMenu;
 
     [SerializeField] GameObject shopDescription;
+
+    [Header("Save UI Configuration")]
+
+    [SerializeField] GameObject saveWarningDisplay;
 
     //this is the color the buttons assume when we click on them
     Color buttonPressedColor = new Color(1, .81f, .19f);
@@ -112,10 +119,47 @@ public class ButtonManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    
+    public void CloseTutorial()
+    {
+        tutorialUI.SetActive(false);
+        Time.timeScale = 1;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     public void SaveGamePress()
     {
+        string path = Application.persistentDataPath + "/savePlayerData.json";
 
+        if (File.Exists(path))
+        {
+            saveWarningDisplay.SetActive(true);
+
+            Time.timeScale = 0;
+        }
+        else
+        {
+            DataManager.Instance.SavePlayerData();
+        }
+    }
+
+    public void NoSaveGame()
+    {
+        saveWarningDisplay.SetActive(false);
+
+        Time.timeScale = 1;
+    }
+
+    public void SaveSaveGame()
+    {
+        DataManager.Instance.SavePlayerData();
+
+        ResumeGame();
+
+        saveWarningDisplay.SetActive(false);
+
+        Time.timeScale = 1;
     }
 
     //for when we click stats on the pause menu we

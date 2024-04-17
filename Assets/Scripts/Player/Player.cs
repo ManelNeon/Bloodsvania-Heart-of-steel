@@ -39,7 +39,6 @@ public class Player : Stats
         //getting the start from father class and going with it
         base.Start();
 
-        //setting the level at 1
         level = 1;
 
         //calculating the xp needed for the new level
@@ -161,7 +160,7 @@ public class Player : Stats
         gameOverText.text = "";
 
         //the text that will appear when we die
-        string text = "You have passed away, sayonara madafaka you are dead as fuk.";
+        string text = "You have passed away, wanna load the game or go back to the main menu?";
 
         //the text display 
         foreach (char c in text)
