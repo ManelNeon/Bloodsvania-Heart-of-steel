@@ -160,7 +160,7 @@ public class Player : Stats
         gameOverText.text = "";
 
         //the text that will appear when we die
-        string text = "You have passed away, wanna load the game or go back to the main menu?";
+        string text = "You have passed away, go back to the main menu and get your last save file!";
 
         //the text display 
         foreach (char c in text)

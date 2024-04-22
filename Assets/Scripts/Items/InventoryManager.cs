@@ -45,11 +45,11 @@ public class InventoryManager : MonoBehaviour
                 {
                     quantity = 1;
                 }
+                Debug.Log("Adicionou Item");
                 itemSlot[i].AddItem(currentItem.itemName, quantity, currentItem.itemSprite, currentItem.itemDescription, currentItem.itemCode, currentItem.effectQuantity, currentItem.itemEffect, itemID);
                 return;
             }
         }
-        Debug.Log("Inventory Full");
     }
 
     //we return a true or false if the item exists (necessary for the side quests)
@@ -61,11 +61,14 @@ public class InventoryManager : MonoBehaviour
             {
                 if (itemSlot[i].quantity - 1 == 0)
                 {
+                    Debug.Log("Apgou o item");
                     itemSlot[i].EraseItem();
                 }
                 else
                 {
+                    Debug.Log("Menos um item");
                     itemSlot[i].quantity -= 1;
+                    itemSlot[i].ChangeQuantity();
                 }
                 return true;
             }

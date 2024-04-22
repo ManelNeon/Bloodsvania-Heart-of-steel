@@ -13,6 +13,10 @@ public class NPC : MonoBehaviour
     //a bool to check if it's hema starting the dialoge or the NPC
     public bool isHemaStarting;
 
+    bool internalHemaStarting;
+
+    bool isNotFirstTime;
+
     //hema's sprite
     public Sprite hemaSprite;
 
@@ -76,6 +80,15 @@ public class NPC : MonoBehaviour
     // this is for when we start the dialogue
     public virtual void StartDialogue()
     {
+        if (!isNotFirstTime)
+        {
+            internalHemaStarting = isHemaStarting;
+
+            isNotFirstTime = true;
+        }
+
+        isHemaStarting = internalHemaStarting;
+
         //we set the index to zero
         index = 0;
 

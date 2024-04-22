@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Black Stone
-  quantity: 32
+  quantity: 1
   itemSprite: {fileID: -551174239, guid: a11c07f2eaa00d141b3f4372c6f3b3e7, type: 3}
   itemEffect: Unknown
   effectQuantity: 200

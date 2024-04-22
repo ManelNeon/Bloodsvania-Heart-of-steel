@@ -250,6 +250,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         itemImage.enabled = false;
         itemImage.sprite = null;
         quantityText.enabled = false;
+        itemID = 999;
         itemName = "";
     }
 

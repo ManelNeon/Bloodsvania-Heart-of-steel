@@ -30,6 +30,8 @@ public class NPCSideQuest : NPC
     //the quest manager
     [SerializeField] QuestManager questManager;
 
+    [SerializeField] InventoryManager inventoryManager;
+
     [Header("Dialogue Related")]
 
     //the dialogues that appear when we accept the quest
@@ -159,11 +161,6 @@ public class NPCSideQuest : NPC
     //we override the start dialogue
     public override void StartDialogue()
     {
-
-        //we get the inventory manager
-        InventoryManager inventoryManager = GameObject.Find("PlayerStatsHolder").GetComponent<InventoryManager>();
-
-
         //if we are doing the quest we look for the item and if it exists we complete the quest (in the inventory manager we delete the item)
         if (questAcceptedSecond)
         {
