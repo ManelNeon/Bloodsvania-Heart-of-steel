@@ -43,16 +43,6 @@ public class DataManager : MonoBehaviour
     //debug only, testing
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            SavePlayerData();
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            LoadData();
-        }
-
         if (Input.GetKeyDown(KeyCode.K))
         {
             string path = Application.persistentDataPath + "/savePlayerData.json";

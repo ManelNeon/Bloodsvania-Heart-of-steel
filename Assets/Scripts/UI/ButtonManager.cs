@@ -95,6 +95,7 @@ public class ButtonManager : MonoBehaviour
         inventoryMenu.SetActive(false);
         statsMenu.SetActive(false);
         shopMenu.SetActive(false);
+        saveWarningDisplay.SetActive(false);
 
         //then we put the button's colors back to normal
         statsButton.color = Color.white;

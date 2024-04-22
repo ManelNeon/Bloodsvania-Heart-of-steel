@@ -146,6 +146,12 @@ public class GameManager : MonoBehaviour
         if (isTutorial)
         {
             tutorialNotice.SetActive(true);
+
+            tutorialBlockers.SetActive(true);
+        }
+        else
+        {
+            tutorialBlockers.SetActive(false);
         }
 
         walkScene.SetActive(true);
