@@ -162,7 +162,7 @@ public class NPCSideQuest : NPC
     public override void StartDialogue()
     {
         //if we are doing the quest we look for the item and if it exists we complete the quest (in the inventory manager we delete the item)
-        if (questAcceptedSecond)
+        if (questAcceptedSecond && !questCompleted)
         {
             if (inventoryManager.LookForItem(questItemName))
             {

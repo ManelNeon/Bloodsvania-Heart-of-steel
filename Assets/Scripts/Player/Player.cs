@@ -10,7 +10,7 @@ public class Player : Stats
     [HideInInspector] public int skillPoint;
 
     //player's level, starts at 1
-    [HideInInspector] public int level;
+    public int level;
 
     //player's xp
     [HideInInspector] public int xp;
@@ -39,7 +39,10 @@ public class Player : Stats
         //getting the start from father class and going with it
         base.Start();
 
-        level = 1;
+        if (GameManager.Instance.isTutorial)
+        {
+            level = 1;
+        }
 
         //calculating the xp needed for the new level
         NewLevelXP();

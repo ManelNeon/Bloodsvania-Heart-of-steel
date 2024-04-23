@@ -208,6 +208,8 @@ public class DataManager : MonoBehaviour
 
             playerStats.gold = data.gold;
 
+            playerStats.level = data.level;
+
             playerStats.maxHealth = data.healthStat;
 
             playerStats.maxMana = data.manaStat;
